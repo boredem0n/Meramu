@@ -1,3 +1,4 @@
+// src/components/PopularProducts.jsx
 import React from 'react';
 
 // --- Mock Data ---
