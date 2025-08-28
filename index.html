@@ -562,16 +562,14 @@
             const message = input.value.trim();
 
             if (message) {
-                // Add user message
                 const userMessageEl = document.createElement('div');
                 userMessageEl.className = 'flex justify-end';
-                userMessageEl.innerHTML = \`<div class="bg-brand-hunter-green text-white rounded-lg p-3 max-w-xs shadow-sm"><p>\${message}</p></div>\`;
+                userMessageEl.innerHTML = `<div class="bg-brand-hunter-green text-white rounded-lg p-3 max-w-xs shadow-sm"><p>${message}</p></div>`;
                 chatContainer.appendChild(userMessageEl);
 
                 input.value = '';
                 chatContainer.parentElement.scrollTop = chatContainer.parentElement.scrollHeight;
 
-                // Simulate bot response
                 setTimeout(() => {
                     const botMessageEl = document.createElement('div');
                     botMessageEl.className = 'flex justify-start';
@@ -582,7 +580,7 @@
                         botResponse = "Kalau badan terasa lelah, Wedang Secang bisa membantu menyegarkan kembali. Mau resepnya disimpan?";
                     }
                     
-                    botMessageEl.innerHTML = \`<div class="bg-white rounded-lg p-3 max-w-xs shadow-sm"><p class="text-brand-cafe-noir">\${botResponse}</p></div>\`;
+                    botMessageEl.innerHTML = `<div class="bg-white rounded-lg p-3 max-w-xs shadow-sm"><p class="text-brand-cafe-noir">${botResponse}</p></div>`;
                     chatContainer.appendChild(botMessageEl);
                     chatContainer.parentElement.scrollTop = chatContainer.parentElement.scrollHeight;
                 }, 1500);
@@ -593,7 +591,6 @@
             mainContent.innerHTML = ''; 
             window.scrollTo(0, 0);
             
-            // Manage floating cart visibility
             const floatingCart = document.getElementById('floating-cart-bar');
             if (['home', 'category', 'product'].includes(page)) {
                 updateFloatingCart();
@@ -611,7 +608,7 @@
                 case 'racikan': mainContent.innerHTML = racikanPage(); break;
                 case 'bot': mainContent.innerHTML = botPage(); break;
                 case 'voucher': case 'account': case 'recipe':
-                    mainContent.innerHTML = \`<div class="p-8 text-center bg-brand-bg min-h-screen"><h1 class="text-2xl font-bold text-brand-dark-green">\${page.charAt(0).toUpperCase() + page.slice(1)} Page</h1><p class="text-brand-cafe-noir">This page is under construction.</p><button onclick="navigateTo('home')" class="mt-4 bg-brand-hunter-green text-white px-4 py-2 rounded-lg">Go Home</button></div>\`;
+                    mainContent.innerHTML = `<div class="p-8 text-center bg-brand-bg min-h-screen"><h1 class="text-2xl font-bold text-brand-dark-green">${page.charAt(0).toUpperCase() + page.slice(1)} Page</h1><p class="text-brand-cafe-noir">This page is under construction.</p><button onclick="navigateTo('home')" class="mt-4 bg-brand-hunter-green text-white px-4 py-2 rounded-lg">Go Home</button></div>`;
                     break;
                 default: mainContent.innerHTML = homePage();
             }
