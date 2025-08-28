@@ -298,24 +298,4 @@
                 } else {
                     this.mapMarker = L.marker([lat, lng], { draggable: true }).addTo(this.mapInstance);
                 }
-                this.mapInstance.on('click', (e) => this.mapMarker.setLatLng(e.latlng));
-            },
-            async confirm() {
-                if (!this.mapMarker) return;
-                const { lat, lng } = this.mapMarker.getLatLng();
-                const distance = Utils.calculateDistance(CONSTANTS.TOKO_COORDS[0], CONSTANTS.TOKO_COORDS[1], lat, lng);
-                
-                AppState.deliveryCost = distance < 5 ? 0 : CONSTANTS.PRICES.deliveryFee;
-                AppState.recipientAddress = await Utils.getAddressFromCoords(lat, lng);
-
-                DOM.mapModal.classList.add('hidden');
-                App.render();
-            }
-        };
-
-        // --- 6. INITIALIZE THE APP ---
-        document.addEventListener('DOMContentLoaded', () => App.init());
-
-    </script>
-</body>
-</html>
+                this.mapInstance.on('cli
