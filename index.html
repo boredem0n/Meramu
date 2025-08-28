@@ -15,7 +15,6 @@
         .screen { display: none; }
         .screen.active { display: block; }
         #map-container { height: 300px; z-index: 0; }
-        /* Style for the dark theme checkout */
         .checkout-dark { background-color: #1E1E1E; color: white; }
         .checkout-dark-panel { background-color: #2C2C2C; }
         .checkout-dark-input { background-color: #2C2C2C; border: 1px solid #4A4A4A; }
@@ -29,7 +28,6 @@
             <!-- Screens will be rendered here -->
         </div>
 
-        <!-- Bottom Navigation Bar -->
         <nav id="bottom-nav" class="fixed bottom-0 left-0 right-0 h-20 z-40 max-w-md mx-auto">
             <div class="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 h-16">
                 <div class="flex justify-around h-full">
@@ -59,7 +57,6 @@
             </div>
         </nav>
 
-        <!-- Modals -->
         <div id="product-modal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 hidden">
             <div id="product-modal-content" class="bg-white rounded-xl shadow-2xl p-6 w-11/12 max-w-sm"></div>
         </div>
@@ -82,7 +79,7 @@
         ];
         const REMPAH_OPTIONS = ["Ginger", "Turmeric", "Galangal", "Sappanwood", "Cinnamon", "Sugar", "Lime", "Cloves", "Nutmeg", "Javanese Ginger", "Lemongrass", "Cardamom"];
         const PRICES = { regular: 14000, xtra: 19000, diabeticSugar: 5000, adminFee: 1000, sambal: 500, deliveryFee: 10000 };
-        const TOKO_COORDS = [-6.9830, 110.4338]; // Toko di Jalan Kuala Mas Raya CB 35 Semarang
+        const TOKO_COORDS = [-6.9830, 110.4338];
 
         // --- APPLICATION STATE ---
         let state = {
@@ -106,7 +103,6 @@
         const mainContent = document.getElementById('main-content');
         const bottomNav = document.getElementById('bottom-nav');
         const productModal = document.getElementById('product-modal');
-        const productModalContent = document.getElementById('product-modal-content');
         const mapModal = document.getElementById('map-modal');
         let mapInstance = null;
         let mapMarker = null;
@@ -151,14 +147,14 @@
         }
 
         function calculateDistance(lat1, lon1, lat2, lon2) {
-            const R = 6371; // Earth radius in km
+            const R = 6371;
             const dLat = (lat2 - lat1) * Math.PI / 180;
             const dLon = (lon2 - lon1) * Math.PI / 180;
             const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
                       Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
                       Math.sin(dLon / 2) * Math.sin(dLon / 2);
             const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-            return R * c; // Distance in km
+            return R * c;
         }
 
         // --- RENDERING LOGIC ---
@@ -259,14 +255,24 @@
                     if (product.type === 'snack_simple') {
                         addToCart(product);
                     } else {
-                        // Open modal logic here
+                        // In a full app, you'd open a customization modal here
+                        addToCart(product);
                     }
                 });
             });
         }
         
-        function renderMeramuFlow() { /* ... Full Meramu flow code ... */ }
-        function renderBotScreen() { /* ... Full Bot screen code ... */ }
+        function renderMeramuFlow() {
+            // This is a placeholder. A full implementation would have multiple steps.
+            mainContent.innerHTML = `<div class="p-5"><h1 class="text-2xl font-bold">Meramu Flow</h1><button id="meramu-back-home" class="mt-4 bg-amber-800 text-white p-2 rounded">Back to Home</button></div>`;
+            document.getElementById('meramu-back-home').addEventListener('click', () => navigateTo('home'));
+        }
+
+        function renderBotScreen() {
+            // This is a placeholder.
+            mainContent.innerHTML = `<div class="p-5"><h1 class="text-2xl font-bold">Bot Screen</h1><button id="bot-back-home" class="mt-4 bg-amber-800 text-white p-2 rounded">Back to Home</button></div>`;
+            document.getElementById('bot-back-home').addEventListener('click', () => navigateTo('home'));
+        }
 
         function renderCartScreen() {
             if (state.cart.length === 0) {
@@ -294,7 +300,7 @@
                             <p>${item.name}</p>
                             <p>${formatCurrency(item.price)}</p>
                         </div>
-                        <p class="text-sm text-gray-300">${item.ingredients.join(', ')}</p>
+                        <p class="text-sm text-gray-300">${(item.ingredients || []).join(', ')}</p>
                         ${detailsHtml}
                         <div class="border-b border-gray-600 pt-2"></div>
                         <div class="flex justify-between text-gray-300 pt-2"><p>Admin Fee</p><p>${formatCurrency(PRICES.adminFee)}</p></div>
@@ -313,9 +319,4 @@
                         <div>
                             <label class="font-semibold text-amber-500 mb-2 block">Delivery Option</label>
                             <div class="flex gap-4">
-                                <button data-option="Pick Up" class="delivery-option flex-1 p-3 rounded-lg font-semibold text-center ${state.deliveryOption === 'Pick Up' ? 'bg-amber-600 text-white' : 'checkout-dark-panel'}">Pick Up</button>
-                                <button data-option="Jamu Gendong" class="delivery-option flex-1 p-3 rounded-lg font-semibold text-center ${state.deliveryOption === 'Jamu Gendong' ? 'bg-amber-600 text-white' : 'checkout-dark-panel'}">Jamu Gendong</button>
-                            </div>
-                        </div>
-                        <div id="map-button-container">
-                           <button id="open-map-btn" class="w
+                                <button data-option="Pick Up" class="delivery-option flex-1 p-3 rounded-lg font-semibold text-center ${state.deliveryOption === 'Pick Up' ? 'bg-amb
