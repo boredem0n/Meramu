@@ -10,25 +10,26 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <style>
+        /* Custom styles for the application */
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
         #map-container { height: 300px; z-index: 0; }
         .checkout-dark { background-color: #1E1E1E; color: white; }
         .checkout-dark-panel { background-color: #2C2C2C; }
         .checkout-dark-input { background-color: #2C2C2C; border: 1px solid #4A4A4A; }
-        .checkout-dark-input:focus { outline: none; border-color: #D97706; }
+        .checkout-dark-input:focus { outline: none; border-color: #D97706; /* amber-500 */ }
     </style>
 </head>
 <body class="bg-gray-100">
 
     <div id="app-container" class="font-sans antialiased bg-white max-w-md mx-auto shadow-2xl relative min-h-screen">
+        <!-- Main content area where screens are rendered -->
         <div id="main-content" class="pb-24">
             <!-- Screens will be rendered here by JavaScript -->
         </div>
 
         <!-- Bottom Navigation Bar -->
         <nav id="bottom-nav" class="fixed bottom-0 left-0 right-0 h-20 z-40 max-w-md mx-auto">
-            <!-- Navigation HTML remains the same -->
             <div class="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 h-16">
                 <div class="flex justify-around h-full">
                     <button data-screen="home" class="nav-item flex flex-col items-center justify-center pt-2 transition-colors w-1/5">
@@ -39,7 +40,7 @@
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path></svg>
                         <span class="text-xs font-semibold">Voucher</span>
                     </button>
-                    <div class="w-1/5"></div>
+                    <div class="w-1/5"></div> <!-- Placeholder for the central button -->
                     <button data-screen="orders" class="nav-item flex flex-col items-center justify-center pt-2 transition-colors w-1/5">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
                         <span class="text-xs font-semibold">Orders</span>
@@ -80,8 +81,14 @@
         };
 
         const CONSTANTS = {
-            PRICES: { regular: 14000, xtra: 19000, diabeticSugar: 5000, adminFee: 1000, sambal: 500, deliveryFee: 10000 },
-            TOKO_COORDS: [-6.9830, 110.4338], // Semarang
+            PRICES: { adminFee: 1000, deliveryFee: 10000 },
+            TOKO_COORDS: [-6.9830, 110.4338], // Toko di Semarang
+            POPULAR_PRODUCTS: [
+                { id: 'item1', name: 'Bir Pletok', category: 'Minuman Hangat', image: 'https://placehold.co/600x400/854d0e/ffffff?text=Bir+Pletok', price: 25000 },
+                { id: 'item2', name: 'Panada', category: 'Camilan', image: 'https://placehold.co/600x400/eab308/ffffff?text=Panada', price: 10000 },
+                { id: 'item3', name: 'Kunyit Asam', category: 'Minuman Hangat', image: 'https://placehold.co/600x400/f59e0b/ffffff?text=Kunyit+Asam', price: 22000 },
+                { id: 'item4', name: 'Lemper Ayam', category: 'Camilan', image: 'https://placehold.co/600x400/78350f/ffffff?text=Lemper', price: 12000 },
+            ],
         };
 
         const DOM = {
@@ -120,6 +127,7 @@
                 this.navigateTo('home');
             },
             navigateTo(screenName) {
+                if (!screenName) return;
                 AppState.screen = screenName;
                 this.render();
             },
@@ -141,13 +149,21 @@
                     const svg = item.querySelector('svg');
                     const span = item.querySelector('span');
                     const isActive = item.dataset.screen === AppState.screen;
-                    svg?.classList.toggle('text-amber-800', isActive);
-                    svg?.classList.toggle('text-gray-400', !isActive);
-                    span?.classList.toggle('text-amber-800', isActive);
-                    span?.classList.toggle('text-gray-400', !isActive);
+                    const isCentralButton = item.parentElement.classList.contains('absolute');
+                    
+                    if (isCentralButton) {
+                        svg?.classList.add('text-white');
+                    } else {
+                        svg?.classList.toggle('text-amber-800', isActive);
+                        svg?.classList.toggle('text-gray-400', !isActive);
+                        span?.classList.toggle('text-amber-800', isActive);
+                        span?.classList.toggle('text-gray-400', !isActive);
+                    }
                 });
             },
             addToCart(item) {
+                // For simplicity, we replace the cart with the new item.
+                // In a real app, you'd push to an array.
                 AppState.cart = [{ ...item, ingredients: item.ingredients || [item.category] }];
                 this.navigateTo('cart');
             }
@@ -157,145 +173,111 @@
         const Screens = {
             home: {
                 render() {
-                    return `<div class="bg-orange-50 min-h-screen">
-                                <header class="bg-amber-800 text-white p-5 rounded-b-3xl shadow-lg">
-                                    <div class="flex justify-between items-center mb-4">
-                                        <h1 class="text-2xl font-bold tracking-wider">MERAMU</h1>
-                                        <div class="bg-white text-amber-800 font-bold px-4 py-1 rounded-full text-sm shadow-md">23 POIN</div>
+                    const productCards = CONSTANTS.POPULAR_PRODUCTS.map(item => `
+                        <div data-product-id="${item.id}" class="product-card bg-white rounded-xl shadow p-3 flex-shrink-0 w-40 cursor-pointer">
+                            <img src="${item.image}" alt="${item.name}" class="w-full h-24 rounded-lg object-cover mb-3 pointer-events-none" />
+                            <h4 class="font-bold text-amber-900 truncate pointer-events-none">${item.name}</h4>
+                            <p class="font-bold text-amber-700 text-sm pointer-events-none">${Utils.formatCurrency(item.price)}</p>
+                        </div>
+                    `).join('');
+
+                    return \`
+                        <div class="bg-orange-50 min-h-screen">
+                            <header class="bg-amber-800 text-white p-5 rounded-b-3xl shadow-lg">
+                                <div class="flex justify-between items-center mb-4">
+                                    <h1 class="text-2xl font-bold tracking-wider">MERAMU</h1>
+                                    <div class="bg-white text-amber-800 font-bold px-4 py-1 rounded-full text-sm shadow-md">23 POIN</div>
+                                </div>
+                                <p class="text-lg font-light">Hi, Simbok!</p>
+                            </header>
+                            <div class="p-5">
+                                <div class="mb-8">
+                                    <h3 class="text-xl font-bold text-amber-900 mb-3">Kategori</h3>
+                                    <div class="grid grid-cols-4 gap-3 text-center">
+                                        <button class="bg-white p-3 rounded-lg shadow"><span class="text-2xl">🔥</span><p class="font-semibold text-sm text-amber-800">Hangat</p></button>
+                                        <button class="bg-white p-3 rounded-lg shadow"><span class="text-2xl">❄️</span><p class="font-semibold text-sm text-amber-800">Dingin</p></button>
+                                        <button class="bg-white p-3 rounded-lg shadow"><span class="text-2xl">🥐</span><p class="font-semibold text-sm text-amber-800">Camilan</p></button>
+                                        <button class="bg-white p-3 rounded-lg shadow"><span class="text-2xl">📜</span><p class="font-semibold text-sm text-amber-800">Resep</p></button>
                                     </div>
-                                    <p class="text-lg font-light">Hi, Simbok!</p>
-                                </header>
-                                <!-- ... other home content ... -->
-                            </div>`;
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-bold text-amber-900 mb-3">Populer Saat Ini!</h3>
+                                    <div class="flex space-x-4 overflow-x-auto pb-4 -mx-5 px-5 scrollbar-hide">
+                                        \${productCards}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    \`;
                 },
-                addListeners() { /* Add home screen listeners here */ }
+                addListeners() {
+                    document.querySelectorAll('.product-card').forEach(card => {
+                        card.addEventListener('click', () => {
+                            const product = CONSTANTS.POPULAR_PRODUCTS.find(p => p.id === card.dataset.productId);
+                            if (product) {
+                                App.addToCart(product);
+                            }
+                        });
+                    });
+                }
             },
             cart: {
                 render() {
                     if (AppState.cart.length === 0) {
-                        return `<div class="p-5 text-center"><h2 class="font-bold">Cart is Empty</h2><button id="cart-back-home" class="mt-4 bg-amber-800 text-white font-semibold py-2 px-6 rounded-lg">Back to Home</button></div>`;
+                        return \`<div class="p-5 text-center"><h2 class="font-bold">Keranjang Kosong</h2><button id="cart-back-home" class="mt-4 bg-amber-800 text-white font-semibold py-2 px-6 rounded-lg">Kembali ke Home</button></div>\`;
                     }
                     const item = AppState.cart[0];
                     const total = item.price + CONSTANTS.PRICES.adminFee + AppState.deliveryCost;
 
-                    let detailsHtml = '';
-                    if (item.details) {
-                        const detailsList = Object.entries(item.details)
-                            .filter(([key, value]) => value !== null && !['name', 'ingredients'].includes(key))
-                            .map(([key, value]) => `<span class="capitalize">${key.replace('Level', ' Level')}: <strong>${value}</strong></span>`)
-                            .join(' &bull; ');
-                        if (detailsList) detailsHtml = `<p class="text-xs text-gray-400 mt-1">${detailsList}</p>`;
-                    }
-
-                    return `<div class="checkout-dark min-h-screen p-5 pb-28">
-                                <h2 class="text-center text-2xl font-bold mb-6">Your Order</h2>
+                    return \`<div class="checkout-dark min-h-screen p-5 pb-28">
+                                <h2 class="text-center text-2xl font-bold mb-6">Pesanan Anda</h2>
                                 <div class="checkout-dark-panel rounded-xl p-4 space-y-3 mb-6">
-                                    <div class="flex justify-between font-bold"><p>${item.name}</p><p>${Utils.formatCurrency(item.price)}</p></div>
-                                    <p class="text-sm text-gray-300">${item.ingredients.join(', ')}</p>
-                                    ${detailsHtml}
-                                    <div class="border-b border-gray-600 pt-2"></div>
-                                    <div class="flex justify-between text-gray-300 pt-2"><p>Admin Fee</p><p>${Utils.formatCurrency(CONSTANTS.PRICES.adminFee)}</p></div>
-                                    <div class="flex justify-between text-gray-300"><p>Delivery Cost</p><p id="delivery-cost-display">${Utils.formatCurrency(AppState.deliveryCost)}</p></div>
-                                    <div class="flex justify-between font-bold text-xl border-t border-gray-600 pt-3"><p>Total Payment</p><p id="total-payment-display">${Utils.formatCurrency(total)}</p></div>
+                                    <div class="flex justify-between font-bold"><p>\${item.name}</p><p>\${Utils.formatCurrency(item.price)}</p></div>
+                                    <p class="text-sm text-gray-300 border-b border-gray-600 pb-3">\${item.ingredients.join(', ')}</p>
+                                    <div class="flex justify-between text-gray-300 pt-2"><p>Biaya Admin</p><p>\${Utils.formatCurrency(CONSTANTS.PRICES.adminFee)}</p></div>
+                                    <div class="flex justify-between text-gray-300"><p>Ongkos Kirim</p><p id="delivery-cost-display">\${Utils.formatCurrency(AppState.deliveryCost)}</p></div>
+                                    <div class="flex justify-between font-bold text-xl border-t border-gray-600 pt-3"><p>Total Pembayaran</p><p id="total-payment-display">\${Utils.formatCurrency(total)}</p></div>
                                 </div>
                                 <div class="space-y-4">
-                                    <!-- Form Fields -->
                                     <div>
-                                        <label class="font-semibold text-amber-500">Recipient Name</label>
-                                        <input type="text" value="Budi tikus" class="w-full checkout-dark-input p-3 rounded-lg mt-1">
+                                        <label class="font-semibold text-amber-500">Nama Penerima</label>
+                                        <input type="text" value="Budi" class="w-full checkout-dark-input p-3 rounded-lg mt-1">
                                     </div>
                                     <div>
-                                        <label class="font-semibold text-amber-500">Area/Address</label>
-                                        <input type="text" id="address-input" value="${AppState.recipientAddress}" placeholder="Pilih lokasi dari peta" class="w-full checkout-dark-input p-3 rounded-lg mt-1" readonly>
+                                        <label class="font-semibold text-amber-500">Alamat</label>
+                                        <input type="text" id="address-input" value="\${AppState.recipientAddress}" placeholder="Pilih lokasi dari peta" class="w-full checkout-dark-input p-3 rounded-lg mt-1" readonly>
                                     </div>
-                                    <!-- Delivery Options -->
                                     <div>
-                                        <label class="font-semibold text-amber-500 mb-2 block">Delivery Option</label>
+                                        <label class="font-semibold text-amber-500 mb-2 block">Opsi Pengiriman</label>
                                         <div class="flex gap-4">
-                                            <button data-option="Pick Up" class="delivery-option flex-1 p-3 rounded-lg font-semibold text-center ${AppState.deliveryOption === 'Pick Up' ? 'bg-amber-600' : 'checkout-dark-panel'}">Pick Up</button>
-                                            <button data-option="Jamu Gendong" class="delivery-option flex-1 p-3 rounded-lg font-semibold text-center ${AppState.deliveryOption === 'Jamu Gendong' ? 'bg-amber-600' : 'checkout-dark-panel'}">Jamu Gendong</button>
+                                            <button data-option="Pick Up" class="delivery-option flex-1 p-3 rounded-lg font-semibold text-center \${AppState.deliveryOption === 'Pick Up' ? 'bg-amber-600' : 'checkout-dark-panel'}">Ambil Sendiri</button>
+                                            <button data-option="Jamu Gendong" class="delivery-option flex-1 p-3 rounded-lg font-semibold text-center \${AppState.deliveryOption === 'Jamu Gendong' ? 'bg-amber-600' : 'checkout-dark-panel'}">Jamu Gendong</button>
                                         </div>
                                     </div>
                                     <div id="map-button-container">
                                        <button id="open-map-btn" class="w-full mt-2 bg-blue-600 text-white font-bold py-3 rounded-lg">Pilih Lokasi di Peta</button>
                                     </div>
-                                    <!-- Payment Options -->
                                     <div>
-                                        <label class="font-semibold text-amber-500 mb-2 block">Payment Method</label>
+                                        <label class="font-semibold text-amber-500 mb-2 block">Metode Pembayaran</label>
                                         <div class="flex gap-2">
-                                            <button data-payment="QRIS" class="payment-method flex-1 p-3 rounded-lg font-semibold ${AppState.paymentMethod === 'QRIS' ? 'bg-amber-600' : 'checkout-dark-panel'}">QRIS</button>
-                                            <button data-payment="E-Wallet" class="payment-method flex-1 p-3 rounded-lg font-semibold ${AppState.paymentMethod === 'E-Wallet' ? 'bg-amber-600' : 'checkout-dark-panel'}">E-Wallet</button>
-                                            <button data-payment="Card" class="payment-method flex-1 p-3 rounded-lg font-semibold ${AppState.paymentMethod === 'Card' ? 'bg-amber-600' : 'checkout-dark-panel'}">Card</button>
+                                            <button data-payment="QRIS" class="payment-method flex-1 p-3 rounded-lg font-semibold \${AppState.paymentMethod === 'QRIS' ? 'bg-amber-600' : 'checkout-dark-panel'}">QRIS</button>
+                                            <button data-payment="E-Wallet" class="payment-method flex-1 p-3 rounded-lg font-semibold \${AppState.paymentMethod === 'E-Wallet' ? 'bg-amber-600' : 'checkout-dark-panel'}">E-Wallet</button>
                                         </div>
                                     </div>
-                                    <div id="ewallet-options" class="${AppState.paymentMethod === 'E-Wallet' ? '' : 'hidden'} mt-2">
+                                    <div id="ewallet-options" class="\${AppState.paymentMethod === 'E-Wallet' ? '' : 'hidden'} mt-2">
                                         <div class="flex gap-2 justify-center">
-                                            <button data-ewallet="OVO" class="ewallet-option flex-1 p-2 rounded-lg text-sm ${AppState.eWalletOption === 'OVO' ? 'bg-purple-600' : 'checkout-dark-panel'}">OVO</button>
-                                            <button data-ewallet="Dana" class="ewallet-option flex-1 p-2 rounded-lg text-sm ${AppState.eWalletOption === 'Dana' ? 'bg-blue-600' : 'checkout-dark-panel'}">Dana</button>
-                                            <button data-ewallet="Shopeepay" class="ewallet-option flex-1 p-2 rounded-lg text-sm ${AppState.eWalletOption === 'Shopeepay' ? 'bg-orange-600' : 'checkout-dark-panel'}">ShopeePay</button>
+                                            <button data-ewallet="OVO" class="ewallet-option flex-1 p-2 rounded-lg text-sm \${AppState.eWalletOption === 'OVO' ? 'bg-purple-600' : 'checkout-dark-panel'}">OVO</button>
+                                            <button data-ewallet="Dana" class="ewallet-option flex-1 p-2 rounded-lg text-sm \${AppState.eWalletOption === 'Dana' ? 'bg-blue-600' : 'checkout-dark-panel'}">Dana</button>
+                                            <button data-ewallet="Shopeepay" class="ewallet-option flex-1 p-2 rounded-lg text-sm \${AppState.eWalletOption === 'Shopeepay' ? 'bg-orange-600' : 'checkout-dark-panel'}">ShopeePay</button>
                                         </div>
                                     </div>
-                                    <div id="qris-display" class="${AppState.paymentMethod === 'QRIS' ? '' : 'hidden'} mt-4"><div class="checkout-dark-panel p-4 rounded-lg flex justify-center"><img src="https://placehold.co/200x200/ffffff/000000?text=SCAN+QRIS" alt="QRIS Code" /></div></div>
-                                    <button id="pay-now-btn" class="w-full mt-6 bg-green-600 text-white font-bold py-4 rounded-xl text-lg">Pay Now</button>
+                                    <div id="qris-display" class="\${AppState.paymentMethod === 'QRIS' ? '' : 'hidden'} mt-4"><div class="checkout-dark-panel p-4 rounded-lg flex justify-center"><img src="https://placehold.co/200x200/ffffff/000000?text=SCAN+QRIS" alt="QRIS Code" /></div></div>
+                                    <button id="pay-now-btn" class="w-full mt-6 bg-green-600 text-white font-bold py-4 rounded-xl text-lg">Bayar Sekarang</button>
                                 </div>
-                            </div>`;
+                            </div>\`;
                 },
                 addListeners() {
                     document.getElementById('cart-back-home')?.addEventListener('click', () => App.navigateTo('home'));
                     
                     document.querySelectorAll('.delivery-option').forEach(btn => btn.addEventListener('click', e => {
-                        AppState.deliveryOption = e.target.dataset.option;
-                        AppState.deliveryCost = 0;
-                        AppState.recipientAddress = AppState.deliveryOption === 'Pick Up' ? 'Ambil di Toko' : '';
-                        App.render();
-                    }));
-
-                    const openMapBtn = document.getElementById('open-map-btn');
-                    if (openMapBtn) {
-                        openMapBtn.style.display = AppState.deliveryOption === 'Pick Up' ? 'none' : 'block';
-                        openMapBtn.addEventListener('click', () => MapModule.open());
-                    }
-                    
-                    document.querySelectorAll('.payment-method').forEach(btn => btn.addEventListener('click', e => {
-                        AppState.paymentMethod = e.target.dataset.payment;
-                        AppState.eWalletOption = null;
-                        App.render();
-                    }));
-
-                    document.querySelectorAll('.ewallet-option').forEach(btn => btn.addEventListener('click', e => {
-                        AppState.eWalletOption = e.target.dataset.ewallet;
-                        App.render();
-                    }));
-                }
-            },
-            // Define other screens (meramu, bot, etc.) here in the same modular way
-        };
-
-        // --- 5. MAP MODULE ---
-        const MapModule = {
-            mapInstance: null,
-            mapMarker: null,
-            open() {
-                DOM.mapModal.classList.remove('hidden');
-                setTimeout(() => {
-                    navigator.geolocation.getCurrentPosition(
-                        pos => this.init(pos.coords.latitude, pos.coords.longitude),
-                        () => this.init(CONSTANTS.TOKO_COORDS[0], CONSTANTS.TOKO_COORDS[1])
-                    );
-                }, 100);
-            },
-            init(lat, lng) {
-                if (this.mapInstance) {
-                    this.mapInstance.invalidateSize();
-                    this.mapInstance.setView([lat, lng], 15);
-                } else {
-                    this.mapInstance = L.map('map-container').setView([lat, lng], 15);
-                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(this.mapInstance);
-                    document.getElementById('confirm-location-btn').addEventListener('click', () => this.confirm());
-                }
-                if (this.mapMarker) {
-                    this.mapMarker.setLatLng([lat, lng]);
-                } else {
-                    this.mapMarker = L.marker([lat, lng], { draggable: true }).addTo(this.mapInstance);
-                }
-                this.mapInstance.on('cli
+   
