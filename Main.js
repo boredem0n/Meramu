@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="id">
-  <head>
+<head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Klinik Si Mbok Jamu – Preview</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>MERAMU – Prototype</title>
     <!-- Tailwind via CDN (JIT) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- React 18 UMD + Babel for JSX in-browser -->
@@ -11,39 +11,395 @@
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
-      /* Prevent overscroll bounce on mobile preview */
-      html, body { height: 100%; }
-      body { background: #fff; }
+        /* Prevent overscroll bounce on mobile preview */
+        html, body { 
+            height: 100%; 
+            overscroll-behavior-y: contain;
+        }
+        body { 
+            background-color: #f0f0f0; 
+            font-family: sans-serif;
+        }
+        /* Simple scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
     </style>
-  </head>
-  <body>
-    <div class="min-h-screen flex items-center justify-center bg-zinc-100 p-4">
-      <!-- Phone frame -->
-      <div class="w-full max-w-md">
-        <div id="root"></div>
-      </div>
+</head>
+<body>
+    <div class="min-h-screen flex items-center justify-center bg-zinc-100 p-0 sm:p-4">
+        <!-- Phone frame -->
+        <div class="w-full max-w-md h-screen sm:h-auto sm:min-h-[800px] bg-white shadow-2xl">
+            <div id="root" class="h-full"></div>
+        </div>
     </div>
 
     <script type="text/babel">
-      const { useState } = React;
+        const { useState, Fragment } = React;
 
-      // --- Mock Data ---
-      const POPULAR_PRODUCTS = [
-        { id: 'item1', name: 'Bir Pletok', category: 'Hot Drinks', image: 'https://placehold.co/600x400/854d0e/ffffff?text=Bir+Pletok', price: 25000 },
-        { id: 'item2', name: 'Panada', category: 'Snacks', image: 'https://placehold.co/600x400/eab308/ffffff?text=Panada', price: 10000 },
-      ];
+        // --- Mock Data ---
+        const POPULAR_PRODUCTS = [
+          { id: 'item1', name: 'Bir Pletok', category: 'Hot Drinks', image: 'https://placehold.co/600x400/854d0e/ffffff?text=Bir+Pletok', price: 25000 },
+          { id: 'item2', name: 'Panada', category: 'Snacks', image: 'https://placehold.co/600x400/eab308/ffffff?text=Panada', price: 10000 },
+          { id: 'item3', name: 'Jamu Kunyit Asam', category: 'Cold Drinks', image: 'https://placehold.co/600x400/f59e0b/ffffff?text=Jamu', price: 18000 },
+          { id: 'item4', name: 'Sarabba', category: 'Hot Drinks', image: 'https://placehold.co/600x400/a16207/ffffff?text=Sarabba', price: 22000 },
+        ];
 
-      const REMPAH_OPTIONS = [
-        'Ginger', 'Turmeric', 'Galangal', 'Sappanwood', 'Cinnamon', 'Sugar',
-        'Lime', 'Cloves', 'Nutmeg', 'Javanese Ginger', 'Lemongrass', 'Cardamom',
-      ];
+        const REMPAH_OPTIONS = [
+            "Ginger", "Turmeric", "Galangal", "Sappanwood", "Cinnamon", "Sugar", 
+            "Lime", "Cloves", "Nutmeg", "Javanese Ginger", "Lemongrass", "Cardamom"
+        ];
 
-      const PRICES = {
-        regular: 14000,
-        xtra: 29000,
-        diabeticSugar: 5000,
-        adminFee: 1000,
-      };
+        const PRICES = {
+            regular: 14000,
+            xtra: 29000,
+            diabeticSugar: 5000,
+            adminFee: 1000,
+            sambal: 500,
+        };
 
-      // --- Helper Components ---
-      const Icon
+        // --- Helper Components ---
+        const Icon = ({ name, className = 'w-6 h-6', isActive = false }) => {
+            const icons = {
+                arrowLeft: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />,
+                ramuan: <svg className="w-10 h-10" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M5 3a1 1 0 000 2c0 1.1.9 2 2 2h6a2 2 0 002-2 1 1 0 100-2H5z"></path><path fillRule="evenodd" d="M3 8a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM5.05 11.636a1 1 0 01.707.293l2 2a1 1 0 01-1.414 1.414l-2-2a1 1 0 01.707-1.707zM14.95 11.636a1 1 0 01.707 1.707l-2 2a1 1 0 01-1.414-1.414l2-2a1 1 0 01.707-.293zM10 15a1 1 0 011 1v2a1 1 0 11-2 0v-2a1 1 0 011-1z" clipRule="evenodd"></path></svg>,
+                home: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />,
+                voucher: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />,
+                orders: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />,
+                account: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />,
+            };
+            const colorClass = isActive ? 'text-amber-800' : 'text-gray-400';
+            const finalClassName = `${className} ${colorClass}`;
+            return <svg className={finalClassName} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">{icons[name]}</svg>;
+        };
+        
+        // --- Main App Screens ---
+
+        function HomeScreen({ setScreen, setSelectedItem, user }) {
+          return (
+            <div className="bg-orange-50 min-h-screen">
+              <header className="bg-white p-4 pt-8">
+                <div className="flex justify-between items-center">
+                    <div>
+                        <h1 className="text-2xl font-bold text-amber-900">MERAMU</h1>
+                        <p className="text-gray-500">Hi, {user.name}!</p>
+                    </div>
+                    <div className="flex items-center space-x-2 bg-amber-100 text-amber-900 font-bold px-3 py-1 rounded-full">
+                        <span className="text-lg">23</span>
+                        <span>POIN</span>
+                    </div>
+                </div>
+              </header>
+              <div className="p-5 pb-28">
+                <div className="mb-8">
+                    <h3 className="text-xl font-bold text-amber-900 mb-3">Category</h3>
+                    <div className="grid grid-cols-4 gap-3 text-center">
+                        <button className="bg-white p-3 rounded-lg shadow"><span className="text-2xl">🔥</span><p className="font-semibold text-sm text-amber-800">Hot</p></button>
+                        <button className="bg-white p-3 rounded-lg shadow"><span className="text-2xl">❄️</span><p className="font-semibold text-sm text-amber-800">Ice</p></button>
+                        <button className="bg-white p-3 rounded-lg shadow"><span className="text-2xl">🥐</span><p className="font-semibold text-sm text-amber-800">Food</p></button>
+                        <button onClick={() => setScreen('recipe')} className="bg-white p-3 rounded-lg shadow"><span className="text-2xl">📜</span><p className="font-semibold text-sm text-amber-800">Recipe</p></button>
+                    </div>
+                </div>
+
+                <div>
+                  <div className="flex justify-between items-center mb-3">
+                    <h3 className="text-xl font-bold text-amber-900">Popular Now!</h3>
+                    <button className="text-amber-800 font-semibold text-2xl">→</button>
+                  </div>
+                  <div className="flex space-x-4 overflow-x-auto pb-4">
+                    {POPULAR_PRODUCTS.map(item => (
+                      <button key={item.id} onClick={() => setSelectedItem(item)} className="flex-shrink-0 w-40 bg-white rounded-xl shadow p-3 text-left">
+                        <img src={item.image} alt={item.name} className="w-full h-28 rounded-lg object-cover mb-3" />
+                        <h4 className="font-bold text-amber-900">{item.name}</h4>
+                        <p className="font-bold text-amber-700 text-sm">Rp {item.price.toLocaleString('id-ID')}</p>
+                      </button>
+                    ))}
+                    <div className="flex-shrink-0 w-40 bg-white rounded-xl shadow p-3 text-center flex flex-col justify-center items-center">
+                        <button onClick={() => setScreen('bot')} className="bg-amber-100 w-20 h-20 rounded-full flex items-center justify-center mb-2">
+                            <span className="text-4xl">👩‍⚕️</span>
+                        </button>
+                        <h4 className="font-bold text-amber-900">Konsul Si Mbok</h4>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        }
+
+        function ProductModal({ item, closeModal, addToCart }) {
+            const [sugar, setSugar] = useState('Normal');
+            const [sambal, setSambal] = useState('Tanpa Sambal');
+            
+            const handleAddToCart = () => {
+                let finalPrice = item.price;
+                let options = [];
+                if (item.name === 'Bir Pletok') {
+                    options.push(sugar);
+                } else if (item.name === 'Panada') {
+                    if (sambal !== 'Tanpa Sambal') finalPrice += PRICES.sambal;
+                    options.push(sambal);
+                }
+                
+                addToCart({ ...item, price: finalPrice, options });
+                closeModal();
+            };
+
+            return (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+                    <div className="bg-white rounded-2xl p-6 w-full max-w-sm">
+                        <h2 className="text-2xl font-bold text-amber-900 mb-4">{item.name}</h2>
+                        {item.name === 'Bir Pletok' && (
+                            <div className="mb-4">
+                                <h3 className="font-semibold text-amber-800 mb-2">Sugar Level</h3>
+                                <div className="flex gap-2">
+                                    {['Less', 'Normal', 'More'].map(level => (
+                                        <button key={level} onClick={() => setSugar(level)} className={`flex-1 p-3 rounded-lg font-semibold ${sugar === level ? 'bg-amber-800 text-white' : 'bg-gray-200'}`}>{level}</button>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                         {item.name === 'Panada' && (
+                            <div className="mb-4">
+                                <h3 className="font-semibold text-amber-800 mb-2">Sambal Option</h3>
+                                <div className="flex flex-col gap-2">
+                                    {['Tanpa Sambal', 'Sambal Roa', 'Sambal Kecap'].map(sbl => (
+                                        <button key={sbl} onClick={() => setSambal(sbl)} className={`p-3 rounded-lg font-semibold text-left ${sambal === sbl ? 'bg-amber-800 text-white' : 'bg-gray-200'}`}>
+                                            {sbl} {sbl !== 'Tanpa Sambal' && `(+Rp ${PRICES.sambal})`}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                        <div className="flex gap-3 mt-6">
+                            <button onClick={closeModal} className="flex-1 bg-gray-200 text-gray-700 font-bold py-3 rounded-lg">Cancel</button>
+                            <button onClick={handleAddToCart} className="flex-1 bg-amber-900 text-white font-bold py-3 rounded-lg">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+        
+        function BotScreen({ setScreen, savedRecipes, setSavedRecipes }) {
+            const [messages, setMessages] = useState([ { from: 'bot', text: "How do you feel?" } ]);
+            const [userInput, setUserInput] = useState('');
+            const [stage, setStage] = useState('ask'); // ask -> diagnosing -> result -> ask_save -> saved
+
+            const handleSend = () => {
+                if (!userInput.trim()) return;
+                const newMessages = [...messages, { from: 'you', text: userInput }];
+                setMessages(newMessages);
+                setUserInput('');
+                setStage('diagnosing');
+
+                setTimeout(() => {
+                    const diagnosis = "Here's your health complaint: Fatigue and a slight cold.";
+                    const recipe = "Recipe Suggestion: A warm blend of Ginger, Lemongrass, and Cinnamon.";
+                    setMessages(prev => [...prev, { from: 'bot', text: "Diagnosing..." }, { from: 'bot', text: diagnosis }, { from: 'bot', text: recipe }]);
+                    setStage('result');
+                }, 1500);
+                
+                setTimeout(() => {
+                    setMessages(prev => [...prev, { from: 'bot', text: "Do you wish to save this recipe?" }]);
+                    setStage('ask_save');
+                }, 2500);
+            };
+
+            const handleSaveRecipe = () => {
+                const recipeNumber = `#SIMBOK${String(savedRecipes.length + 1).padStart(3, '0')}`;
+                const newRecipe = {
+                    id: recipeNumber,
+                    name: 'Anti Rusing', // Example name
+                    date: new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }),
+                    ingredients: ['Ginger', 'Lemongrass', 'Cinnamon'],
+                    type: 'Simbok'
+                };
+                setSavedRecipes(prev => [...prev, newRecipe]);
+                setMessages(prev => [...prev, { from: 'you', text: "Yes" }, { from: 'bot', text: `OK! Here's your recipe number: ${recipeNumber}` }]);
+                setStage('saved');
+            };
+
+            return (
+                <div className="p-5 bg-orange-50 min-h-screen flex flex-col">
+                    <div className="flex items-center mb-6">
+                        <button onClick={() => setScreen('home')} className="p-2 rounded-full bg-white shadow"><Icon name="arrowLeft" className="text-amber-800"/></button>
+                        <h2 className="text-2xl font-bold text-amber-900 text-center flex-1">Klinik Si Mbok Jamu</h2>
+                    </div>
+                    <div className="flex-grow space-y-4 overflow-y-auto">
+                        {messages.map((msg, index) => (
+                            <div key={index} className={`flex ${msg.from === 'bot' ? 'justify-start' : 'justify-end'}`}>
+                                <div className={`p-3 rounded-lg max-w-xs ${msg.from === 'bot' ? 'bg-white shadow' : 'bg-amber-800 text-white'}`}>{msg.text}</div>
+                            </div>
+                        ))}
+                    </div>
+                    {stage === 'ask' && (
+                        <div className="mt-4 flex gap-2">
+                            <input type="text" value={userInput} onChange={e => setUserInput(e.target.value)} onKeyPress={e => e.key === 'Enter' && handleSend()} placeholder="Describe your feelings..." className="w-full p-3 bg-white rounded-lg"/>
+                            <button onClick={handleSend} className="bg-amber-900 text-white font-bold py-3 px-5 rounded-lg">Send</button>
+                        </div>
+                    )}
+                    {stage === 'ask_save' && (
+                        <div className="mt-4 flex gap-2">
+                            <button onClick={handleSaveRecipe} className="flex-1 bg-amber-800 text-white font-bold py-3 rounded-lg">Yes, save it</button>
+                            <button onClick={() => setScreen('home')} className="flex-1 bg-gray-200 text-gray-700 font-bold py-3 rounded-lg">No, thanks</button>
+                        </div>
+                    )}
+                    {stage === 'saved' && (
+                         <button onClick={() => setScreen('home')} className="w-full mt-4 bg-amber-900 text-white font-bold py-4 rounded-xl text-lg">End Chat</button>
+                    )}
+                </div>
+            );
+        }
+
+        function RecipeScreen({ setScreen, savedRecipes, transactionHistory, addToCart }) {
+            const [activeTab, setActiveTab] = useState('Simbok'); // Simbok or Own
+            
+            const simbokRecipes = savedRecipes.filter(r => r.type === 'Simbok');
+            const ownRecipes = transactionHistory.filter(t => t.id.startsWith('meramu'));
+
+            return (
+                <div className="p-5 bg-orange-50 min-h-screen">
+                    <div className="flex items-center mb-6">
+                        <button onClick={() => setScreen('home')} className="p-2 rounded-full bg-white shadow"><Icon name="arrowLeft" className="text-amber-800"/></button>
+                        <h2 className="text-2xl font-bold text-amber-900 text-center flex-1">Heritage Recipe</h2>
+                    </div>
+                    <div className="flex border-b-2 border-gray-200 mb-4">
+                        <button onClick={() => setActiveTab('Simbok')} className={`flex-1 font-bold pb-2 ${activeTab === 'Simbok' ? 'text-amber-800 border-b-4 border-amber-800' : 'text-gray-400'}`}>Simbok's Recipe</button>
+                        <button onClick={() => setActiveTab('Own')} className={`flex-1 font-bold pb-2 ${activeTab === 'Own' ? 'text-amber-800 border-b-4 border-amber-800' : 'text-gray-400'}`}>My Own Blend</button>
+                    </div>
+                    <div className="space-y-4">
+                        {activeTab === 'Simbok' && (
+                            simbokRecipes.length === 0 ? <p className="text-center text-gray-500 mt-16">No saved recipes from Simbok yet.</p> :
+                            simbokRecipes.map(recipe => (
+                                <div key={recipe.id} className="bg-white p-4 rounded-lg shadow">
+                                    <div className="flex justify-between items-start">
+                                        <div>
+                                            <h3 className="font-bold text-lg text-amber-900">{recipe.name}</h3>
+                                            <p className="text-sm text-gray-500">date {recipe.date}</p>
+                                        </div>
+                                        <p className="text-sm font-semibold text-gray-400">{recipe.id}</p>
+                                    </div>
+                                    <div className="text-right mt-2">
+                                        <button onClick={() => addToCart(recipe)} className="bg-amber-800 text-white font-bold text-sm py-1 px-4 rounded-lg">Add to Cart</button>
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                         {activeTab === 'Own' && (
+                            ownRecipes.length === 0 ? <p className="text-center text-gray-500 mt-16">No purchase history of custom blends yet.</p> :
+                            ownRecipes.map(recipe => (
+                                <div key={recipe.id} className="bg-white p-4 rounded-lg shadow">
+                                    <div className="flex justify-between items-start">
+                                        <div>
+                                            <h3 className="font-bold text-lg text-amber-900">{recipe.name}</h3>
+                                            <p className="text-sm text-gray-500">Purchased {recipe.date}</p>
+                                        </div>
+                                        <p className="text-sm font-semibold text-gray-400">#{recipe.id.slice(-6)}</p>
+                                    </div>
+                                    <div className="text-right mt-2">
+                                        <button onClick={() => addToCart(recipe)} className="bg-amber-800 text-white font-bold text-sm py-1 px-4 rounded-lg">Reorder</button>
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        function BottomNavBar({ activeScreen, setScreen }) {
+            const navItems = [
+                { name: 'home', label: 'Home', icon: 'home' },
+                { name: 'voucher', label: 'Voucher', icon: 'voucher' },
+                { name: 'meramu', label: 'Mix', icon: 'ramuan' },
+                { name: 'orders', label: 'Orders', icon: 'orders' },
+                { name: 'account', label: 'Account', icon: 'account' },
+            ];
+
+            return (
+                <div className="fixed bottom-0 left-0 right-0 h-20 w-full max-w-md mx-auto">
+                    <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 h-16">
+                        <div className="flex justify-around h-full">
+                            {navItems.map((item, index) => {
+                                if (index === 2) {
+                                    return <div key={item.name} className="w-1/5"></div>;
+                                }
+                                return (
+                                    <button 
+                                        key={item.name} 
+                                        onClick={() => setScreen(item.name)}
+                                        className="flex flex-col items-center justify-center pt-2 transition-colors w-1/5"
+                                    >
+                                        <Icon name={item.icon} isActive={activeScreen === item.name} />
+                                        <span className={`text-xs font-semibold ${activeScreen === item.name ? 'text-amber-800' : 'text-gray-400'}`}>{item.label}</span>
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2">
+                        <button 
+                            onClick={() => setScreen('meramu')} 
+                            className="bg-amber-900 text-white w-20 h-20 rounded-full flex items-center justify-center shadow-2xl border-4 border-white" 
+                            aria-label="Mix Your Own Jamu"
+                        >
+                            <Icon name="ramuan" />
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+        
+        function App() {
+            const [screen, setScreen] = useState('home');
+            const [cart, setCart] = useState([]);
+            const [savedRecipes, setSavedRecipes] = useState([]);
+            const [transactionHistory, setTransactionHistory] = useState([]);
+            const [selectedItem, setSelectedItem] = useState(null);
+            const [user, setUser] = useState({ name: 'User' });
+
+            const addToCart = (itemToAdd) => {
+                const newCartItem = { ...itemToAdd, id: `cart-${Date.now()}` };
+                setCart(prev => [...prev, newCartItem]);
+                alert(`${itemToAdd.name} added to cart!`);
+            };
+
+            const renderScreen = () => {
+                switch (screen) {
+                    case 'bot': return <BotScreen setScreen={setScreen} savedRecipes={savedRecipes} setSavedRecipes={setSavedRecipes} />;
+                    case 'recipe': return <RecipeScreen setScreen={setScreen} savedRecipes={savedRecipes} transactionHistory={transactionHistory} addToCart={addToCart} />;
+                    case 'meramu': return <div>Meramu Screen Placeholder</div>; // Placeholder
+                    case 'cart': return <div>Cart Screen Placeholder</div>; // Placeholder
+                    case 'orders': return <div>Orders Screen Placeholder</div>; // Placeholder
+                    case 'voucher': return <div>Voucher Screen Placeholder</div>; // Placeholder
+                    case 'account': return <div>Account Screen Placeholder</div>; // Placeholder
+                    default: return <HomeScreen setScreen={setScreen} setSelectedItem={setSelectedItem} user={user} />;
+                }
+            };
+
+            return (
+                <div className="font-sans antialiased bg-white max-w-md mx-auto shadow-2xl relative min-h-screen h-full">
+                    <div className="pb-24 h-full overflow-y-auto">
+                        {renderScreen()}
+                    </div>
+                    {selectedItem && <ProductModal item={selectedItem} closeModal={() => setSelectedItem(null)} addToCart={addToCart} />}
+                    <BottomNavBar activeScreen={screen} setScreen={setScreen} />
+                </div>
+            );
+        }
+
+        const container = document.getElementById('root');
+        const root = ReactDOM.createRoot(container);
+        root.render(<App />);
+    </script>
+</body>
+</html>
+
