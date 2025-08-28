@@ -1,0 +1,624 @@
+import React, { useState } from 'react';
+
+// --- Mock Data ---
+const POPULAR_PRODUCTS = [
+  { id: 'item1', name: 'Bir Pletok', category: 'Hot Drinks', image: 'https://placehold.co/600x400/854d0e/ffffff?text=Bir+Pletok', price: 25000, type: 'drink' },
+  { id: 'item2', name: 'Panada', category: 'Snacks', image: 'https://placehold.co/600x400/eab308/ffffff?text=Panada', price: 10000, type: 'snack' },
+  { id: 'item3', name: 'Kunyit Asam', category: 'Hot Drinks', image: 'https://placehold.co/600x400/f59e0b/ffffff?text=Kunyit+Asam', price: 22000, type: 'drink' },
+  { id: 'item4', name: 'Lemper Ayam', category: 'Snacks', image: 'https://placehold.co/600x400/78350f/ffffff?text=Lemper', price: 12000, type: 'snack_simple' },
+];
+
+const REMPAH_OPTIONS = [
+    "Ginger", "Turmeric", "Galangal", "Sappanwood", "Cinnamon", "Sugar", 
+    "Lime", "Cloves", "Nutmeg", "Javanese Ginger", "Lemongrass", "Cardamom"
+];
+
+const PRICES = {
+    regular: 14000,
+    xtra: 29000,
+    diabeticSugar: 5000,
+    adminFee: 1000,
+    sambal: 500,
+};
+
+
+// --- Helper Components ---
+const Icon = ({ name, className = 'w-6 h-6', isActive = false }) => {
+    const icons = {
+        arrowLeft: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />,
+        ramuan: <svg className="w-10 h-10" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M5 3a1 1 0 000 2c0 1.1.9 2 2 2h6a2 2 0 002-2 1 1 0 100-2H5z"></path><path fillRule="evenodd" d="M3 8a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM5.05 11.636a1 1 0 01.707.293l2 2a1 1 0 01-1.414 1.414l-2-2a1 1 0 01.707-1.707zM14.95 11.636a1 1 0 01.707 1.707l-2 2a1 1 0 01-1.414-1.414l2-2a1 1 0 01.707-.293zM10 15a1 1 0 011 1v2a1 1 0 11-2 0v-2a1 1 0 011-1z" clipRule="evenodd"></path></svg>,
+        home: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />,
+        voucher: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />,
+        orders: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />,
+        account: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />,
+        close: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />,
+    };
+    return <svg className={`${className} ${isActive ? 'text-amber-800' : 'text-gray-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">{icons[name]}</svg>;
+};
+
+const MeramuStepIndicator = ({ currentStep }) => {
+    const steps = ['Size', 'Ingredients', 'Finalize'];
+    return (
+        <div className="flex justify-center items-center space-x-2 mb-6">
+            {steps.map((step, index) => (
+                <React.Fragment key={step}>
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold ${index + 1 <= currentStep ? 'bg-amber-800 text-white' : 'bg-gray-200 text-gray-500'}`}>
+                        {index + 1}
+                    </div>
+                    {index < steps.length - 1 && <div className={`h-1 w-12 ${index + 1 < currentStep ? 'bg-amber-800' : 'bg-gray-200'}`}></div>}
+                </React.Fragment>
+            ))}
+        </div>
+    );
+};
+
+// --- New Product Modal Component ---
+const ProductModal = ({ product, onClose, addToCart }) => {
+    // State for drink options
+    const [sugar, setSugar] = useState('White Sugar');
+    // State for snack options
+    const [sambal, setSambal] = useState('Tanpa Sambal');
+
+    const handleAddToCart = () => {
+        let finalPrice = product.price;
+        let options = [];
+        let ingredients = [product.category];
+
+        if (product.type === 'drink') {
+            options.push(`Sugar: ${sugar}`);
+            ingredients.push(sugar);
+        } else if (product.type === 'snack') {
+            if (sambal !== 'Tanpa Sambal') {
+                finalPrice += PRICES.sambal;
+            }
+            options.push(`Sambal: ${sambal}`);
+            ingredients.push(sambal);
+        }
+
+        const itemToAdd = {
+            ...product,
+            price: finalPrice,
+            name: `${product.name} (${options.join(', ')})`,
+            ingredients: ingredients, // Simplified ingredients for cart display
+        };
+        addToCart(itemToAdd);
+        onClose();
+    };
+
+    return (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+            <div className="bg-white rounded-xl shadow-2xl p-6 w-11/12 max-w-sm">
+                <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-xl font-bold text-amber-900">{product.name}</h3>
+                    <button onClick={onClose} className="text-gray-500 hover:text-gray-800">
+                        <Icon name="close" />
+                    </button>
+                </div>
+
+                <img src={product.image} alt={product.name} className="w-full h-40 rounded-lg object-cover mb-4" />
+
+                {/* Drink Customization */}
+                {product.type === 'drink' && (
+                    <div className="mb-4">
+                        <h4 className="font-semibold text-amber-800 mb-2">Pilih Gula</h4>
+                        <div className="flex gap-2">
+                            {['White Sugar', 'Palm Sugar'].map(s => (
+                                <button key={s} onClick={() => setSugar(s)} className={`flex-1 p-3 rounded-lg font-semibold text-sm ${sugar === s ? 'bg-amber-800 text-white' : 'bg-gray-200'}`}>{s}</button>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* Snack Customization */}
+                {product.type === 'snack' && (
+                    <div className="mb-4">
+                        <h4 className="font-semibold text-amber-800 mb-2">Pilih Sambal</h4>
+                        <div className="space-y-2">
+                            <button onClick={() => setSambal('Tanpa Sambal')} className={`w-full p-3 rounded-lg font-semibold text-left ${sambal === 'Tanpa Sambal' ? 'bg-amber-800 text-white' : 'bg-gray-200'}`}>Tanpa Sambal</button>
+                            <button onClick={() => setSambal('Sambal Roa')} className={`w-full p-3 rounded-lg font-semibold text-left ${sambal === 'Sambal Roa' ? 'bg-amber-800 text-white' : 'bg-gray-200'}`}>Sambal Roa (+Rp {PRICES.sambal})</button>
+                            <button onClick={() => setSambal('Sambal Kecap')} className={`w-full p-3 rounded-lg font-semibold text-left ${sambal === 'Sambal Kecap' ? 'bg-amber-800 text-white' : 'bg-gray-200'}`}>Sambal Kecap (+Rp {PRICES.sambal})</button>
+                        </div>
+                    </div>
+                )}
+
+                <button onClick={handleAddToCart} className="w-full bg-amber-900 text-white font-bold py-3 rounded-xl text-lg hover:bg-amber-800 transition-colors">
+                    Add to Cart
+                </button>
+            </div>
+        </div>
+    );
+};
+
+// --- New Header Component ---
+const Header = () => {
+  const userName = "Simbok"; // Nama statis untuk contoh
+  const userPoints = 23;    // Poin statis untuk contoh
+
+  return (
+    <div className="bg-amber-800 text-white p-5 rounded-b-3xl shadow-lg">
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold tracking-wider">MERAMU</h1>
+        <div className="bg-white text-amber-800 font-bold px-4 py-1 rounded-full text-sm shadow-md">
+          {userPoints} POIN
+        </div>
+      </div>
+      <p className="text-lg font-light">Hi, {userName}!</p>
+    </div>
+  );
+};
+
+
+// --- Main App Screens ---
+
+function HomeScreen({ setScreen, addToCart }) {
+    const [selectedProduct, setSelectedProduct] = useState(null);
+
+    return (
+        <div className="bg-orange-50 min-h-screen">
+            {selectedProduct && <ProductModal product={selectedProduct} onClose={() => setSelectedProduct(null)} addToCart={addToCart} />}
+            
+            <Header />
+
+            <div className="p-5">
+                <div className="mb-8">
+                    <h3 className="text-xl font-bold text-amber-900 mb-3">Category</h3>
+                    <div className="grid grid-cols-4 gap-3 text-center">
+                        <button className="bg-white p-3 rounded-lg shadow"><span className="text-2xl">🔥</span><p className="font-semibold text-sm text-amber-800">Hot</p></button>
+                        <button className="bg-white p-3 rounded-lg shadow"><span className="text-2xl">❄️</span><p className="font-semibold text-sm text-amber-800">Ice</p></button>
+                        <button className="bg-white p-3 rounded-lg shadow"><span className="text-2xl">🥐</span><p className="font-semibold text-sm text-amber-800">Food</p></button>
+                        <button onClick={() => setScreen('recipe')} className="bg-white p-3 rounded-lg shadow"><span className="text-2xl">📜</span><p className="font-semibold text-sm text-amber-800">Recipe</p></button>
+                    </div>
+                </div>
+                
+                <div>
+                    <div className="flex justify-between items-center mb-3">
+                        <h3 className="text-xl font-bold text-amber-900">Popular Now!</h3>
+                        <button onClick={() => setScreen('bot')} className="flex flex-col items-center text-center">
+                            <div className="w-14 h-14 bg-white rounded-full shadow-md flex items-center justify-center">
+                                <span className="text-3xl">🤖</span>
+                            </div>
+                            <p className="text-xs font-semibold text-amber-800 mt-1">Konsul<br/>Si Mbok</p>
+                        </button>
+                    </div>
+                    <div className="flex space-x-4 overflow-x-auto pb-4 -mx-5 px-5 scrollbar-hide">
+                        {POPULAR_PRODUCTS.map(item => (
+                            <div key={item.id} onClick={() => item.type !== 'snack_simple' ? setSelectedProduct(item) : addToCart(item)} className="bg-white rounded-xl shadow p-3 flex-shrink-0 w-40 cursor-pointer">
+                                <img src={item.image} alt={item.name} className="w-full h-24 rounded-lg object-cover mb-3" />
+                                <h4 className="font-bold text-amber-900 truncate">{item.name}</h4>
+                                <p className="font-bold text-amber-700 text-sm">Rp {item.price.toLocaleString('id-ID')}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function BotScreen({ setScreen, savedRecipes, setSavedRecipes }) {
+    const [messages, setMessages] = useState([ { from: 'bot', text: "How do you feel?" } ]);
+    const [userInput, setUserInput] = useState('');
+    const [stage, setStage] = useState('ask'); // ask -> diagnosing -> result -> ask_save -> saved
+
+    const handleSend = () => {
+        if (!userInput.trim()) return;
+        const newMessages = [...messages, { from: 'you', text: userInput }];
+        setMessages(newMessages);
+        setUserInput('');
+        setStage('diagnosing');
+
+        setTimeout(() => {
+            const diagnosis = "Here's your health complaint: Fatigue and a slight cold.";
+            const recipe = "Recipe Suggestion: A warm blend of Ginger, Lemongrass, and Cinnamon.";
+            setMessages(prev => [...prev, { from: 'bot', text: "Diagnosing..." }, { from: 'bot', text: diagnosis }, { from: 'bot', text: recipe }]);
+            setStage('result');
+        }, 1500);
+        
+        setTimeout(() => {
+            setMessages(prev => [...prev, { from: 'bot', text: "Do you wish to save this recipe?" }]);
+            setStage('ask_save');
+        }, 2500);
+    };
+
+    const handleSaveRecipe = () => {
+        const recipeNumber = `#SIMBOK${String(savedRecipes.length + 1).padStart(3, '0')}`;
+        const newRecipe = {
+            id: recipeNumber,
+            name: 'Anti Rusing', // Example name
+            date: new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }),
+            ingredients: ['Ginger', 'Lemongrass', 'Cinnamon'],
+            type: 'Simbok'
+        };
+        setSavedRecipes(prev => [...prev, newRecipe]);
+        setMessages(prev => [...prev, { from: 'you', text: "Yes" }, { from: 'bot', text: `OK! Here's your recipe number: ${recipeNumber}` }]);
+        setStage('saved');
+    };
+
+    return (
+        <div className="p-5 bg-orange-50 min-h-screen flex flex-col">
+            <div className="flex items-center mb-6">
+                <button onClick={() => setScreen('home')} className="p-2 rounded-full bg-white shadow"><Icon name="arrowLeft" className="text-amber-800"/></button>
+                <h2 className="text-2xl font-bold text-amber-900 text-center flex-1">Klinik Si Mbok Jamu</h2>
+            </div>
+            <div className="flex-grow space-y-4 overflow-y-auto pb-4">
+                {messages.map((msg, index) => (
+                    <div key={index} className={`flex ${msg.from === 'bot' ? 'justify-start' : 'justify-end'}`}>
+                        <div className={`p-3 rounded-lg max-w-xs ${msg.from === 'bot' ? 'bg-white shadow' : 'bg-amber-800 text-white'}`}>{msg.text}</div>
+                    </div>
+                ))}
+            </div>
+            {stage === 'ask' && (
+                <div className="mt-4 flex gap-2">
+                    <input type="text" value={userInput} onChange={e => setUserInput(e.target.value)} onKeyPress={e => e.key === 'Enter' && handleSend()} placeholder="Describe your feelings..." className="w-full p-3 bg-white rounded-lg"/>
+                    <button onClick={handleSend} className="bg-amber-900 text-white font-bold py-3 px-5 rounded-lg">Send</button>
+                </div>
+            )}
+            {stage === 'ask_save' && (
+                <div className="mt-4 flex gap-2">
+                    <button onClick={handleSaveRecipe} className="flex-1 bg-amber-800 text-white font-bold py-3 rounded-lg">Yes, save it</button>
+                    <button onClick={() => setScreen('home')} className="flex-1 bg-gray-200 text-gray-700 font-bold py-3 rounded-lg">No, thanks</button>
+                </div>
+            )}
+            {stage === 'saved' && (
+                 <button onClick={() => setScreen('home')} className="w-full mt-4 bg-amber-900 text-white font-bold py-4 rounded-xl text-lg">End Chat</button>
+            )}
+        </div>
+    );
+}
+
+function RecipeScreen({ setScreen, savedRecipes, transactionHistory, addToCart }) {
+    const [activeTab, setActiveTab] = useState('Simbok'); // Simbok or Own
+    
+    const simbokRecipes = savedRecipes.filter(r => r.type === 'Simbok');
+    const ownRecipes = transactionHistory.filter(t => t.id.startsWith('meramu'));
+
+    return (
+        <div className="p-5 bg-orange-50 min-h-screen">
+            <div className="flex items-center mb-6">
+                <button onClick={() => setScreen('home')} className="p-2 rounded-full bg-white shadow"><Icon name="arrowLeft" className="text-amber-800"/></button>
+                <h2 className="text-2xl font-bold text-amber-900 text-center flex-1">Heritage Recipe</h2>
+            </div>
+            <div className="flex border-b-2 border-gray-200 mb-4">
+                <button onClick={() => setActiveTab('Simbok')} className={`flex-1 font-bold pb-2 ${activeTab === 'Simbok' ? 'text-amber-800 border-b-4 border-amber-800' : 'text-gray-400'}`}>Simbok's Recipe</button>
+                <button onClick={() => setActiveTab('Own')} className={`flex-1 font-bold pb-2 ${activeTab === 'Own' ? 'text-amber-800 border-b-4 border-amber-800' : 'text-gray-400'}`}>My Own Blend</button>
+            </div>
+            <div className="space-y-4">
+                {activeTab === 'Simbok' && (
+                    simbokRecipes.length === 0 ? <p className="text-center text-gray-500 mt-16">No saved recipes from Simbok yet.</p> :
+                    simbokRecipes.map(recipe => (
+                        <div key={recipe.id} className="bg-white p-4 rounded-lg shadow">
+                            <div className="flex justify-between items-start">
+                                <div>
+                                    <h3 className="font-bold text-lg text-amber-900">{recipe.name}</h3>
+                                    <p className="text-sm text-gray-500">date {recipe.date}</p>
+                                </div>
+                                <p className="text-sm font-semibold text-gray-400">{recipe.id}</p>
+                            </div>
+                            <div className="text-right mt-2">
+                                <button onClick={() => addToCart(recipe)} className="bg-amber-800 text-white font-bold text-sm py-1 px-4 rounded-lg">Add to Cart</button>
+                            </div>
+                        </div>
+                    ))
+                )}
+                 {activeTab === 'Own' && (
+                    ownRecipes.length === 0 ? <p className="text-center text-gray-500 mt-16">No purchase history of custom blends yet.</p> :
+                    ownRecipes.map(recipe => (
+                        <div key={recipe.id} className="bg-white p-4 rounded-lg shadow">
+                            <div className="flex justify-between items-start">
+                                <div>
+                                    <h3 className="font-bold text-lg text-amber-900">{recipe.name}</h3>
+                                    <p className="text-sm text-gray-500">Purchased {recipe.date}</p>
+                                </div>
+                                <p className="text-sm font-semibold text-gray-400">#{recipe.id.slice(-6)}</p>
+                            </div>
+                            <div className="text-right mt-2">
+                                <button onClick={() => addToCart(recipe)} className="bg-amber-800 text-white font-bold text-sm py-1 px-4 rounded-lg">Reorder</button>
+                            </div>
+                        </div>
+                    ))
+                )}
+            </div>
+        </div>
+    );
+}
+
+function BottomNavBar({ activeScreen, setScreen }) {
+    const navItems = [
+        { name: 'home', label: 'Home', icon: 'home' },
+        { name: 'voucher', label: 'Voucher', icon: 'voucher' },
+        { name: 'meramu', label: 'Mix', icon: 'ramuan' }, // Placeholder for the center button
+        { name: 'orders', label: 'Orders', icon: 'orders' },
+        { name: 'account', label: 'Account', icon: 'account' },
+    ];
+
+    return (
+        <div className="fixed bottom-0 left-0 right-0 h-20 z-40">
+            <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 h-16">
+                <div className="flex justify-around max-w-md mx-auto h-full">
+                    {navItems.map((item, index) => {
+                        if (index === 2) {
+                            return <div key={item.name} className="w-1/5"></div>;
+                        }
+                        return (
+                            <button 
+                                key={item.name} 
+                                onClick={() => setScreen(item.name)}
+                                className="flex flex-col items-center justify-center pt-2 transition-colors w-1/5"
+                            >
+                                <Icon name={item.icon} isActive={activeScreen === item.name} />
+                                <span className={`text-xs font-semibold ${activeScreen === item.name ? 'text-amber-800' : 'text-gray-400'}`}>{item.label}</span>
+                            </button>
+                        );
+                    })}
+                </div>
+            </div>
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2">
+                <button 
+                    onClick={() => setScreen('meramu')} 
+                    className="bg-amber-900 text-white w-20 h-20 rounded-full flex items-center justify-center shadow-2xl border-4 border-white" 
+                    aria-label="Mix Your Own Jamu"
+                >
+                    <Icon name="ramuan" />
+                </button>
+            </div>
+        </div>
+    );
+}
+
+
+function MeramuFlow({ setScreen, addToCart, setTransactionHistory }) {
+    const [step, setStep] = useState(1);
+    const [order, setOrder] = useState({ temp: 'Hot', size: 'Regular', ingredients: [], iceLevel: 'Normal Ice', sugar: 'White Sugar', name: '' });
+    const updateOrder = (newValues) => setOrder(prev => ({ ...prev, ...newValues }));
+    const nextStep = () => setStep(prev => prev + 1);
+    const prevStep = () => setStep(prev => prev - 1);
+    const handleFinish = () => {
+        let price = order.size === 'Regular' ? PRICES.regular : PRICES.xtra;
+        if (order.sugar === 'Diabetic Sugar') price += PRICES.diabeticSugar;
+        const finalOrder = { ...order, id: `meramu-${Date.now()}`, name: order.name || 'Your Jamu', price, quantity: 1, date: new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }) };
+        addToCart(finalOrder);
+        setScreen('cart');
+    };
+    switch (step) {
+        case 1: return <MeramuSizeScreen order={order} updateOrder={updateOrder} nextStep={nextStep} setScreen={setScreen} />;
+        case 2: return <MeramuIngredientsScreen order={order} updateOrder={updateOrder} nextStep={nextStep} prevStep={prevStep} />;
+        case 3: return <MeramuFinalizeScreen order={order} updateOrder={updateOrder} handleFinish={handleFinish} prevStep={prevStep} setTransactionHistory={setTransactionHistory} />;
+        default: return <div>Error</div>;
+    }
+}
+
+function MeramuSizeScreen({ order, updateOrder, nextStep, setScreen }) {
+    const isHot = order.temp === 'Hot';
+    return (
+        <div className="p-5 bg-orange-50 min-h-screen">
+            <button onClick={() => setScreen('home')} className="mb-4 p-2 rounded-full bg-white shadow"><Icon name="arrowLeft" className="text-amber-800"/></button>
+            <MeramuStepIndicator currentStep={1} />
+            <h2 className="text-2xl font-bold text-amber-900 text-center mb-6">Choose Temperature & Size</h2>
+            <div className="space-y-4">
+                <div>
+                    <h3 className="font-semibold text-amber-800 mb-2">Temperature</h3>
+                    <div className="flex gap-4">
+                        <button onClick={() => updateOrder({ temp: 'Hot', size: 'Regular' })} className={`flex-1 p-4 rounded-lg font-bold text-center ${order.temp === 'Hot' ? 'bg-amber-800 text-white' : 'bg-white'}`}>Hot</button>
+                        <button onClick={() => updateOrder({ temp: 'Ice' })} className={`flex-1 p-4 rounded-lg font-bold text-center ${order.temp === 'Ice' ? 'bg-amber-800 text-white' : 'bg-white'}`}>Ice</button>
+                    </div>
+                </div>
+                <div>
+                    <h3 className="font-semibold text-amber-800 mb-2">Size</h3>
+                    <div className="flex gap-4">
+                        <button onClick={() => updateOrder({ size: 'Regular' })} className={`flex-1 p-4 rounded-lg font-bold text-center ${order.size === 'Regular' ? 'bg-amber-800 text-white' : 'bg-white'}`}>Regular (Rp {PRICES.regular.toLocaleString()})</button>
+                        {!isHot && ( <button onClick={() => updateOrder({ size: 'Xtra' })} className={`flex-1 p-4 rounded-lg font-bold text-center ${order.size === 'Xtra' ? 'bg-amber-800 text-white' : 'bg-white'}`}>Xtra (Rp {PRICES.xtra.toLocaleString()})</button> )}
+                    </div>
+                </div>
+            </div>
+            <button onClick={nextStep} className="w-full mt-8 bg-amber-900 text-white font-bold py-4 rounded-xl text-lg">Next</button>
+        </div>
+    );
+}
+
+function MeramuIngredientsScreen({ order, updateOrder, nextStep, prevStep }) {
+    const toggleIngredient = (ingredient) => {
+        const { ingredients } = order;
+        if (ingredients.includes(ingredient)) {
+            updateOrder({ ingredients: ingredients.filter(i => i !== ingredient) });
+        } else if (ingredients.length < 5) {
+            updateOrder({ ingredients: [...ingredients, ingredient] });
+        }
+    };
+    return (
+        <div className="p-5 bg-orange-50 min-h-screen">
+            <button onClick={prevStep} className="mb-4 p-2 rounded-full bg-white shadow"><Icon name="arrowLeft" className="text-amber-800"/></button>
+            <MeramuStepIndicator currentStep={2} />
+            <h2 className="text-2xl font-bold text-amber-900 text-center mb-2">Choose Ingredients</h2>
+            <p className="text-center text-amber-800 mb-6">Maximum 5 selections</p>
+            <div className="grid grid-cols-3 gap-4 mb-8">
+                {REMPAH_OPTIONS.map(rempah => <button key={rempah} onClick={() => toggleIngredient(rempah)} className={`p-4 rounded-xl text-center font-semibold ${order.ingredients.includes(rempah) ? 'bg-amber-800 text-white' : 'bg-white'}`}>{rempah}</button>)}
+            </div>
+            <button onClick={nextStep} disabled={order.ingredients.length === 0} className="w-full mt-8 bg-amber-900 text-white font-bold py-4 rounded-xl text-lg disabled:bg-gray-300">Next ({order.ingredients.length}/5)</button>
+        </div>
+    );
+}
+
+function MeramuFinalizeScreen({ order, updateOrder, handleFinish, prevStep, setTransactionHistory }) {
+    const isIce = order.temp === 'Ice';
+    return (
+        <div className="p-5 bg-orange-50 min-h-screen">
+            <button onClick={prevStep} className="mb-4 p-2 rounded-full bg-white shadow"><Icon name="arrowLeft" className="text-amber-800"/></button>
+            <MeramuStepIndicator currentStep={3} />
+            <h2 className="text-2xl font-bold text-amber-900 text-center mb-6">Final Touches</h2>
+            <div className="space-y-6">
+                {isIce && (
+                    <div>
+                        <h3 className="font-semibold text-amber-800 mb-2">Ice Level</h3>
+                        <div className="grid grid-cols-3 gap-2">
+                            {['Less', 'Normal', 'Extra'].map(level => <button key={level} onClick={() => updateOrder({ iceLevel: `${level} Ice` })} className={`p-3 rounded-lg font-semibold ${order.iceLevel === `${level} Ice` ? 'bg-amber-800 text-white' : 'bg-white'}`}>{level}</button>)}
+                        </div>
+                    </div>
+                )}
+                <div>
+                    <h3 className="font-semibold text-amber-800 mb-2">Sugar Type</h3>
+                    <div className="grid grid-cols-3 gap-2">
+                        {['Palm', 'White'].map(sugar => <button key={sugar} onClick={() => updateOrder({ sugar: `${sugar} Sugar` })} className={`p-3 rounded-lg font-semibold ${order.sugar === `${sugar} Sugar` ? 'bg-amber-800 text-white' : 'bg-white'}`}>{sugar} Sugar</button>)}
+                        <button onClick={() => updateOrder({ sugar: 'Diabetic Sugar' })} className={`p-3 rounded-lg font-semibold ${order.sugar === 'Diabetic Sugar' ? 'bg-amber-800 text-white' : 'bg-white'}`}>Diabetic (+Rp {PRICES.diabeticSugar.toLocaleString()})</button>
+                    </div>
+                </div>
+                <div>
+                    <h3 className="font-semibold text-amber-800 mb-2">Name Your Drink (Optional)</h3>
+                    <input type="text" value={order.name} onChange={e => updateOrder({ name: e.target.value })} className="w-full p-3 bg-white rounded-lg" placeholder="e.g., Budi's Power Potion" />
+                </div>
+            </div>
+            <button onClick={handleFinish} className="w-full mt-8 bg-amber-900 text-white font-bold py-4 rounded-xl text-lg">Add to Cart</button>
+        </div>
+    );
+}
+
+function CartScreen({ cart, setCart, setScreen, setTransactionHistory }) {
+    const [delivery, setDelivery] = useState('Jamu Gendong');
+    const [paymentMethod, setPaymentMethod] = useState('QRIS');
+
+    if (cart.length === 0) {
+        return (
+            <div className="p-5 bg-orange-50 min-h-screen text-center flex flex-col justify-center items-center">
+                <h2 className="text-2xl font-bold text-amber-900 mb-4">Cart is Empty</h2>
+                <button onClick={() => setScreen('home')} className="bg-amber-800 text-white font-semibold py-2 px-6 rounded-lg">Back to Home</button>
+            </div>
+        );
+    }
+    
+    const currentItem = cart[0]; 
+    const deliveryCost = delivery === 'GrabSend' ? 15000 : 0;
+    const total = currentItem.price + PRICES.adminFee + deliveryCost;
+
+    const handleCheckout = () => {
+        const transaction = {
+            ...currentItem,
+            status: delivery === 'Pick Up' ? 'Ready for Pickup' : 'Order Received',
+            deliveryMethod: delivery,
+            totalPrice: total,
+            date: new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })
+        };
+        setTransactionHistory(prev => [...prev, transaction]);
+        setCart([]); 
+        setScreen('orders');
+    };
+    
+    const backScreen = () => {
+        if (currentItem.id.startsWith('meramu')) return 'meramu';
+        if (currentItem.id.startsWith('SIMBOK')) return 'recipe';
+        return 'home';
+    }
+
+    return (
+        <div className="p-5 bg-orange-50 min-h-screen">
+            <button onClick={() => setScreen(backScreen())} className="mb-4 p-2 rounded-full bg-white shadow"><Icon name="arrowLeft" className="text-amber-800"/></button>
+            <h2 className="text-2xl font-bold text-amber-900 text-center mb-6">Your Order</h2>
+            <div className="bg-white p-5 rounded-xl shadow space-y-3">
+                <div className="flex justify-between font-bold"><p>{currentItem.name}</p><p>Rp {currentItem.price.toLocaleString()}</p></div>
+                <p className="text-sm text-gray-500 border-b pb-3">{currentItem.ingredients.join(', ')}</p>
+                <div className="flex justify-between text-gray-600"><p>Admin Fee</p><p>Rp {PRICES.adminFee.toLocaleString()}</p></div>
+                <div className="flex justify-between text-gray-600"><p>Delivery Cost</p><p>Rp {deliveryCost.toLocaleString()}</p></div>
+                <div className="flex justify-between font-bold text-xl border-t pt-3"><p>Total Payment</p><p>Rp {total.toLocaleString()}</p></div>
+            </div>
+            <div className="my-6">
+                <h3 className="font-semibold text-amber-800 mb-2">Recipient Name</h3>
+                <input type="text" className="w-full p-3 bg-white rounded-lg" placeholder="Enter your name" />
+            </div>
+            <div className="my-6">
+                <h3 className="font-semibold text-amber-800 mb-2">Area/Address</h3>
+                <input type="text" className="w-full p-3 bg-white rounded-lg" placeholder="Enter your address" />
+            </div>
+            <div className="my-6">
+                <h3 className="font-semibold text-amber-800 mb-2">Delivery Option</h3>
+                <div className="flex gap-4">
+                    <button onClick={() => setDelivery('Jamu Gendong')} className={`flex-1 p-3 rounded-lg font-semibold text-center ${delivery === 'Jamu Gendong' ? 'bg-amber-800 text-white' : 'bg-white'}`}>Jamu Gendong (&lt;5km Free)</button>
+                    <button onClick={() => setDelivery('GrabSend')} className={`flex-1 p-3 rounded-lg font-semibold text-center ${delivery === 'GrabSend' ? 'bg-amber-800 text-white' : 'bg-white'}`}>GrabSend</button>
+                    <button onClick={() => setDelivery('Pick Up')} className={`flex-1 p-3 rounded-lg font-semibold text-center ${delivery === 'Pick Up' ? 'bg-amber-800 text-white' : 'bg-white'}`}>Pick Up</button>
+                </div>
+            </div>
+            <div className="my-6">
+                <h3 className="font-semibold text-amber-800 mb-2">Payment Method</h3>
+                <div className="flex gap-4">
+                    <button onClick={() => setPaymentMethod('QRIS')} className={`flex-1 p-3 rounded-lg font-semibold text-center ${paymentMethod === 'QRIS' ? 'bg-amber-800 text-white' : 'bg-white'}`}>QRIS</button>
+                    <button onClick={() => setPaymentMethod('E-Wallet')} className={`flex-1 p-3 rounded-lg font-semibold text-center ${paymentMethod === 'E-Wallet' ? 'bg-amber-800 text-white' : 'bg-white'}`}>E-Wallet</button>
+                    <button onClick={() => setPaymentMethod('Card')} className={`flex-1 p-3 rounded-lg font-semibold text-center ${paymentMethod === 'Card' ? 'bg-amber-800 text-white' : 'bg-white'}`}>Card</button>
+                </div>
+                {paymentMethod === 'QRIS' && (
+                    <div className="mt-4 bg-white p-4 rounded-lg flex justify-center">
+                        <img src="https://placehold.co/200x200/ffffff/000000?text=SCAN+QRIS" alt="QRIS Code" />
+                    </div>
+                )}
+            </div>
+            <button onClick={handleCheckout} className="w-full mt-4 bg-amber-900 text-white font-bold py-4 rounded-xl text-lg">Pay Now</button>
+        </div>
+    );
+}
+
+function OrdersScreen({ setScreen, transactionHistory }) {
+    const getStatusMessage = (transaction) => {
+        if (transaction.deliveryMethod === 'Pick Up') return "Your Jamu is ready for pickup";
+        if (transaction.status === 'Diterima') return "Order received, Si Mbok is brewing your Jamu";
+        return "Order received, Si Mbok is brewing your Jamu";
+    };
+
+    return (
+        <div className="p-5 bg-orange-50 min-h-screen">
+            <h2 className="text-3xl font-bold text-amber-900 text-center mb-6">My Orders</h2>
+            <div className="space-y-4">
+                {transactionHistory.length === 0 ? (
+                    <p className="text-center text-gray-500 mt-16">No orders yet.</p>
+                ) : (
+                    transactionHistory.map(trans => (
+                        <div key={trans.id} className="bg-white p-4 rounded-lg shadow">
+                            <div className="flex justify-between items-start">
+                                <div>
+                                    <h3 className="font-bold text-lg text-amber-900">{trans.name}</h3>
+                                    <p className="text-sm text-gray-500">{trans.date}</p>
+                                </div>
+                                <p className="font-bold text-amber-800">Rp {trans.totalPrice.toLocaleString()}</p>
+                            </div>
+                            <div className="mt-2 pt-2 border-t">
+                                <p className="text-sm font-semibold text-green-600">{getStatusMessage(trans)}</p>
+                            </div>
+                        </div>
+                    ))
+                )}
+            </div>
+        </div>
+    );
+}
+
+// --- Main App Component ---
+export default function App() {
+  const [screen, setScreen] = useState('home'); 
+  const [cart, setCart] = useState([]);
+  const [savedRecipes, setSavedRecipes] = useState([]);
+  const [transactionHistory, setTransactionHistory] = useState([]);
+
+  const addToCart = (itemToAdd) => {
+    const newCartItem = { ...itemToAdd, cartId: `cart-${Date.now()}` };
+    setCart([newCartItem]);
+    setScreen('cart');
+  };
+ 
+  const renderScreen = () => {
+    switch (screen) {
+      case 'meramu': return <MeramuFlow setScreen={setScreen} addToCart={addToCart} setTransactionHistory={setTransactionHistory} />;
+      case 'cart': return <CartScreen cart={cart} setCart={setCart} setScreen={setScreen} setTransactionHistory={setTransactionHistory} />;
+      case 'bot': return <BotScreen setScreen={setScreen} savedRecipes={savedRecipes} setSavedRecipes={setSavedRecipes} />;
+      case 'recipe': return <RecipeScreen setScreen={setScreen} savedRecipes={savedRecipes} transactionHistory={transactionHistory} addToCart={addToCart} />;
+      case 'orders': return <OrdersScreen setScreen={setScreen} transactionHistory={transactionHistory} />;
+      case 'home':
+      default:
+        return <HomeScreen setScreen={setScreen} addToCart={addToCart} />;
+    }
+  };
+
+  return (
+    <div className="font-sans antialiased bg-white max-w-md mx-auto shadow-2xl relative min-h-screen">
+      <style>{`.scrollbar-hide::-webkit-scrollbar { display: none; } .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }`}</style>
+      <div className="pb-24">
+        {renderScreen()}
+      </div>
+      {!['meramu'].includes(screen) && <BottomNavBar activeScreen={screen} setScreen={setScreen} />}
+    </div>
+  );
+}
