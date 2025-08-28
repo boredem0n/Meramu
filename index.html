@@ -48,12 +48,9 @@
 <body class="bg-brand-bg">
 
     <div id="app" class="max-w-sm mx-auto bg-white min-h-screen shadow-lg">
-        <!-- Main App Content -->
         <main id="main-content" class="pb-20">
-            <!-- All pages will be rendered here -->
-        </main>
+            </main>
 
-        <!-- Floating Cart Bar -->
         <div id="floating-cart-bar" class="fixed bottom-16 max-w-sm w-full p-3 bg-brand-dark-green text-white hidden z-40">
              <div class="flex justify-between items-center">
                 <div>
@@ -64,7 +61,6 @@
             </div>
         </div>
 
-        <!-- Bottom Navigation Bar -->
         <nav class="fixed bottom-0 max-w-sm mx-auto w-full bg-white border-t border-gray-200 flex justify-around items-center h-16 z-50">
             <button onclick="navigateTo('home')" class="text-center text-gray-600 hover:text-brand-hunter-green transition-colors">
                 <i class="ph-house text-2xl"></i>
@@ -89,7 +85,6 @@
             </button>
         </nav>
         
-        <!-- Custom Alert Modal -->
         <div id="custom-alert-modal" class="modal-overlay fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] opacity-0 pointer-events-none">
             <div class="modal-content bg-white rounded-lg p-6 text-center shadow-xl transform scale-95">
                 <p id="custom-alert-message" class="mb-4 text-brand-cafe-noir"></p>
@@ -564,7 +559,7 @@
             if (message) {
                 const userMessageEl = document.createElement('div');
                 userMessageEl.className = 'flex justify-end';
-                userMessageEl.innerHTML = `<div class="bg-brand-hunter-green text-white rounded-lg p-3 max-w-xs shadow-sm"><p>${message}</p></div>`;
+                userMessageEl.innerHTML = \`<div class="bg-brand-hunter-green text-white rounded-lg p-3 max-w-xs shadow-sm"><p>\${message}</p></div>\`;
                 chatContainer.appendChild(userMessageEl);
 
                 input.value = '';
@@ -580,7 +575,7 @@
                         botResponse = "Kalau badan terasa lelah, Wedang Secang bisa membantu menyegarkan kembali. Mau resepnya disimpan?";
                     }
                     
-                    botMessageEl.innerHTML = `<div class="bg-white rounded-lg p-3 max-w-xs shadow-sm"><p class="text-brand-cafe-noir">${botResponse}</p></div>`;
+                    botMessageEl.innerHTML = \`<div class="bg-white rounded-lg p-3 max-w-xs shadow-sm"><p class="text-brand-cafe-noir">\${botResponse}</p></div>\`;
                     chatContainer.appendChild(botMessageEl);
                     chatContainer.parentElement.scrollTop = chatContainer.parentElement.scrollHeight;
                 }, 1500);
@@ -608,7 +603,7 @@
                 case 'racikan': mainContent.innerHTML = racikanPage(); break;
                 case 'bot': mainContent.innerHTML = botPage(); break;
                 case 'voucher': case 'account': case 'recipe':
-                    mainContent.innerHTML = `<div class="p-8 text-center bg-brand-bg min-h-screen"><h1 class="text-2xl font-bold text-brand-dark-green">${page.charAt(0).toUpperCase() + page.slice(1)} Page</h1><p class="text-brand-cafe-noir">This page is under construction.</p><button onclick="navigateTo('home')" class="mt-4 bg-brand-hunter-green text-white px-4 py-2 rounded-lg">Go Home</button></div>`;
+                    mainContent.innerHTML = \`<div class="p-8 text-center bg-brand-bg min-h-screen"><h1 class="text-2xl font-bold text-brand-dark-green">\${page.charAt(0).toUpperCase() + page.slice(1)} Page</h1><p class="text-brand-cafe-noir">This page is under construction.</p><button onclick="navigateTo('home')" class="mt-4 bg-brand-hunter-green text-white px-4 py-2 rounded-lg">Go Home</button></div>\`;
                     break;
                 default: mainContent.innerHTML = homePage();
             }
