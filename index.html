@@ -3,754 +3,620 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meramu - Modern Jamu</title>
+    <title>Meramu Jamu</title>
+    <!-- Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-        /* Custom colors from the palette */
-        :root {
-            --brand-deep-brown: #8B4411;
-            --brand-brown: #AE6E4E;
-            --brand-light-brown: #CC9767;
-            --brand-beige: #C7AD7F;
-            --brand-light-beige: #F5F5DD;
-            --brand-muted-brown: #A57A5A;
-        }
-        .bg-brand-deep-brown { background-color: var(--brand-deep-brown); }
-        .bg-brand-brown { background-color: var(--brand-brown); }
-        .bg-brand-light-brown { background-color: var(--brand-light-brown); }
-        .bg-brand-beige { background-color: var(--brand-beige); }
-        .bg-brand-light-beige { background-color: var(--brand-light-beige); }
-        .bg-brand-muted-brown { background-color: var(--brand-muted-brown); }
-
-        .text-brand-deep-brown { color: var(--brand-deep-brown); }
-        .text-brand-brown { color: var(--brand-brown); }
-        .text-brand-light-brown { color: var(--brand-light-brown); }
-        .text-brand-beige { color: var(--brand-beige); }
-        .text-brand-light-beige { color: var(--brand-light-beige); }
-        .text-brand-muted-brown { color: var(--brand-muted-brown); }
-        
-        .border-brand-deep-brown { border-color: var(--brand-deep-brown); }
-
-        /* Hide scrollbar */
-        .no-scrollbar::-webkit-scrollbar {
+        /* Custom CSS to hide scrollbars */
+        .scrollbar-hide::-webkit-scrollbar {
             display: none;
         }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
+        .scrollbar-hide {
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
         }
+        /* Simple transition for screen visibility */
         .screen {
             display: none;
         }
         .screen.active {
             display: block;
         }
-        .chat-bubble-bot {
-            background-color: #f1f1f1;
-            align-self: flex-start;
-        }
-        .chat-bubble-user {
-            background-color: var(--brand-beige);
-            color: white;
-            align-self: flex-end;
-        }
     </style>
 </head>
-<body class="bg-brand-light-beige">
+<body class="bg-gray-100">
 
-    <div id="app-container" class="max-w-md mx-auto min-h-screen bg-white shadow-2xl flex flex-col relative">
-        
-        <!-- Main Content -->
-        <main class="flex-grow pb-20 overflow-y-auto">
-
-            <!-- Home Screen (A1) -->
-            <div id="home-screen" class="screen active p-6">
-                <header class="flex justify-between items-center mb-6">
-                    <div>
-                        <h1 class="text-2xl font-bold text-brand-deep-brown">Hi, User!</h1>
-                        <p class="text-sm text-brand-muted-brown">Welcome to Meramu</p>
-                    </div>
-                    <div class="bg-brand-beige text-white font-bold py-2 px-4 rounded-full shadow-md">
-                        0 pts
-                    </div>
-                </header>
-
-                <div class="bg-brand-light-brown text-white p-6 rounded-2xl shadow-lg mb-8 relative">
-                    <h2 class="text-xl font-bold mb-2">Monday Discount</h2>
-                    <p>Buy 1 Get 1 for Es Kopi Kayu Manis!</p>
-                </div>
-
-                <div class="mb-8">
-                    <h3 class="text-xl font-bold text-brand-deep-brown mb-4">Category</h3>
-                    <div class="grid grid-cols-4 gap-4 text-center">
-                        <div class="category-btn" data-category="panas">
-                            <div class="bg-brand-beige p-4 rounded-2xl shadow-sm"><i data-lucide="coffee" class="mx-auto text-white"></i></div>
-                            <span class="text-xs mt-2 block text-brand-muted-brown">Panas</span>
-                        </div>
-                        <div class="category-btn" data-category="dingin">
-                            <div class="bg-brand-beige p-4 rounded-2xl shadow-sm"><i data-lucide="snowflake" class="mx-auto text-white"></i></div>
-                            <span class="text-xs mt-2 block text-brand-muted-brown">Dingin</span>
-                        </div>
-                        <div class="category-btn" data-category="kudapan">
-                            <div class="bg-brand-beige p-4 rounded-2xl shadow-sm"><i data-lucide="croissant" class="mx-auto text-white"></i></div>
-                            <span class="text-xs mt-2 block text-brand-muted-brown">Kudapan</span>
-                        </div>
-                        <div class="category-btn" data-category="recipe">
-                             <div class="bg-brand-beige p-4 rounded-2xl shadow-sm"><i data-lucide="book-marked" class="mx-auto text-white"></i></div>
-                            <span class="text-xs mt-2 block text-brand-muted-brown">Recipe</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mt-8">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-xl font-bold text-brand-deep-brown">Popular!</h3>
-                        <button id="konsul-btn" class="bg-brand-deep-brown text-white rounded-full shadow-lg flex items-center justify-center w-14 h-14">
-                            <i data-lucide="bot"></i>
-                        </button>
-                    </div>
-                    <div id="popular-items" class="flex overflow-x-auto gap-4 no-scrollbar pb-2">
-                        <!-- Popular items will be injected here by JS -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- Category Screen (A2) -->
-            <div id="category-screen" class="screen">
-                <header class="p-4 flex items-center gap-4 border-b">
-                    <button class="nav-btn" data-target="home-screen"><i data-lucide="arrow-left"></i></button>
-                    <h2 id="category-title" class="text-xl font-bold text-brand-deep-brown">Category</h2>
-                </header>
-                <div id="category-items-grid" class="p-4 grid grid-cols-2 gap-4">
-                    <!-- Category items will be injected here by JS -->
-                </div>
-            </div>
-
-            <!-- Product Detail Screen (A3) -->
-            <div id="product-detail-screen" class="screen flex flex-col h-full">
-                 <header class="p-4 flex items-center gap-4 border-b sticky top-0 bg-white z-10">
-                    <button id="back-to-category-btn"><i data-lucide="arrow-left"></i></button>
-                    <h2 class="text-xl font-bold text-brand-deep-brown">Details</h2>
-                </header>
-                <div id="product-details-content" class="p-6 flex-grow overflow-y-auto">
-                    <!-- Product details will be injected here by JS -->
-                </div>
-                <footer class="p-4 border-t bg-white z-10 flex justify-between items-center">
-                    <div>
-                        <p class="text-sm text-gray-500">Total Price</p>
-                        <p id="product-total-price" class="text-2xl font-bold text-brand-deep-brown">Rp 0</p>
-                    </div>
-                    <button id="add-to-cart-btn" class="bg-brand-deep-brown text-white font-bold py-3 px-8 rounded-full shadow-lg">Add to Cart</button>
-                </footer>
-            </div>
-            
-            <!-- Cart Screen (A4/A5) -->
-            <div id="cart-screen" class="screen flex flex-col h-full">
-                <header class="p-4 flex items-center gap-4 border-b">
-                    <button class="nav-btn" data-target="home-screen"><i data-lucide="arrow-left"></i></button>
-                    <h2 class="text-xl font-bold text-brand-deep-brown">Your Order</h2>
-                </header>
-                <div id="cart-items-container" class="p-4 flex-grow overflow-y-auto">
-                    <!-- Cart items will be injected here -->
-                </div>
-                <div class="p-4 mt-auto border-t">
-                    <div class="flex justify-between items-center mb-4">
-                        <span class="text-lg text-gray-600">Total</span>
-                        <span id="cart-total-price" class="text-2xl font-bold text-brand-deep-brown">Rp 0</span>
-                    </div>
-                    <button class="bg-brand-deep-brown text-white w-full py-3 rounded-full font-bold shadow-lg">Pay Now</button>
-                </div>
-            </div>
-
-            <!-- Racikan Sendiri Screen (B1/B2/B3) -->
-            <div id="racikan-screen" class="screen flex flex-col h-full">
-                <header class="p-4 flex items-center gap-4 border-b">
-                    <button class="nav-btn" data-target="home-screen"><i data-lucide="arrow-left"></i></button>
-                    <h2 class="text-xl font-bold text-brand-deep-brown">Jamu Racikan Sendiri</h2>
-                </header>
-                <div class="p-6 space-y-6 flex-grow overflow-y-auto">
-                    <!-- Racikan options will be here -->
-                    <div>
-                        <label class="font-bold text-brand-muted-brown">Temperature</label>
-                        <div id="racikan-temp" class="flex gap-2 mt-2">
-                            <button data-value="hot" data-price="3000" class="racikan-option flex-1 p-2 border rounded-lg">Hot</button>
-                            <button data-value="iced" data-price="0" class="racikan-option flex-1 p-2 border rounded-lg border-brand-deep-brown bg-brand-beige text-white">Iced</button>
-                        </div>
-                    </div>
-                    <div>
-                        <label class="font-bold text-brand-muted-brown">Base</label>
-                        <div id="racikan-base" class="grid grid-cols-3 gap-2 mt-2">
-                            <button data-value="water" data-price="0" class="racikan-option p-2 border rounded-lg border-brand-deep-brown bg-brand-beige text-white">Water</button>
-                            <button data-value="teh" data-price="2000" class="racikan-option p-2 border rounded-lg">Teh</button>
-                            <button data-value="kopi" data-price="5000" class="racikan-option p-2 border rounded-lg">Kopi</button>
-                        </div>
-                    </div>
-                     <div>
-                        <label class="font-bold text-brand-muted-brown">Herbs (Choose up to 3)</label>
-                        <div id="racikan-herbs" class="grid grid-cols-3 gap-2 mt-2">
-                            <!-- Herb options -->
-                        </div>
-                    </div>
-                    <div>
-                        <label class="font-bold text-brand-muted-brown">Sugar</label>
-                        <div id="racikan-sugar" class="grid grid-cols-2 gap-2 mt-2">
-                           <button data-value="no_sugar" data-price="0" class="racikan-option p-2 border rounded-lg border-brand-deep-brown bg-brand-beige text-white">No Sugar</button>
-                           <button data-value="white_sugar" data-price="0" class="racikan-option p-2 border rounded-lg">White Sugar</button>
-                           <button data-value="palm_sugar" data-price="0" class="racikan-option p-2 border rounded-lg">Palm Sugar</button>
-                           <button data-value="diabetic_sugar" data-price="5000" class="racikan-option p-2 border rounded-lg">Diabetic Sugar</button>
-                        </div>
-                    </div>
-                </div>
-                <footer class="p-4 border-t bg-white z-10 flex justify-between items-center">
-                    <div>
-                        <p class="text-sm text-gray-500">Total Price</p>
-                        <p id="racikan-total-price" class="text-2xl font-bold text-brand-deep-brown">Rp 0</p>
-                    </div>
-                    <button id="add-racikan-to-cart-btn" class="bg-brand-deep-brown text-white font-bold py-3 px-8 rounded-full shadow-lg">Add to Cart</button>
-                </footer>
-            </div>
-            
-        </main>
+    <div id="app-container" class="font-sans antialiased bg-white max-w-md mx-auto shadow-2xl relative min-h-screen">
+        <div id="main-content" class="pb-24">
+            <!-- Screens will be rendered here by JavaScript -->
+        </div>
 
         <!-- Bottom Navigation Bar -->
-        <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white border-t-2 border-brand-light-beige shadow-[0_-10px_30px_-15px_rgba(0,0,0,0.1)] rounded-t-2xl z-20">
-            <div class="flex justify-around items-center h-16">
-                <button class="nav-btn text-brand-deep-brown" data-target="home-screen">
-                    <i data-lucide="home"></i>
-                    <span class="text-xs">Home</span>
-                </button>
-                <button class="nav-btn text-brand-muted-brown" data-target="voucher-screen">
-                    <i data-lucide="ticket"></i>
-                    <span class="text-xs">Voucher</span>
-                </button>
-                <button class="nav-btn -mt-8" data-target="racikan-screen">
-                    <div class="bg-brand-deep-brown text-white rounded-full p-4 shadow-xl border-4 border-white">
-                        <i data-lucide="flask-conical"></i>
-                    </div>
-                </button>
-                <button class="nav-btn text-brand-muted-brown" data-target="cart-screen">
-                     <div class="relative">
-                        <i data-lucide="shopping-cart"></i>
-                        <span id="cart-badge" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center hidden">0</span>
-                    </div>
-                    <span class="text-xs">Order</span>
-                </button>
-                <button class="nav-btn text-brand-muted-brown" data-target="account-screen">
-                    <i data-lucide="user"></i>
-                    <span class="text-xs">Account</span>
+        <nav id="bottom-nav" class="fixed bottom-0 left-0 right-0 h-20 z-40 max-w-md mx-auto">
+            <div class="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 h-16">
+                <div class="flex justify-around h-full">
+                    <button data-screen="home" class="nav-item flex flex-col items-center justify-center pt-2 transition-colors w-1/5">
+                        <!-- Home Icon -->
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                        <span class="text-xs font-semibold">Home</span>
+                    </button>
+                    <button data-screen="voucher" class="nav-item flex flex-col items-center justify-center pt-2 transition-colors w-1/5">
+                        <!-- Voucher Icon -->
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path></svg>
+                        <span class="text-xs font-semibold">Voucher</span>
+                    </button>
+                    <div class="w-1/5"></div> <!-- Placeholder for center button -->
+                    <button data-screen="orders" class="nav-item flex flex-col items-center justify-center pt-2 transition-colors w-1/5">
+                        <!-- Orders Icon -->
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                        <span class="text-xs font-semibold">Orders</span>
+                    </button>
+                    <button data-screen="account" class="nav-item flex flex-col items-center justify-center pt-2 transition-colors w-1/5">
+                        <!-- Account Icon -->
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                        <span class="text-xs font-semibold">Account</span>
+                    </button>
+                </div>
+            </div>
+            <div class="absolute bottom-4 left-1/2 -translate-x-1/2">
+                <button data-screen="meramu" class="nav-item bg-amber-900 text-white w-20 h-20 rounded-full flex items-center justify-center shadow-2xl border-4 border-white">
+                    <!-- Ramuan Icon -->
+                    <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M5 3a1 1 0 000 2c0 1.1.9 2 2 2h6a2 2 0 002-2 1 1 0 100-2H5z"></path><path fill-rule="evenodd" d="M3 8a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM5.05 11.636a1 1 0 01.707.293l2 2a1 1 0 01-1.414 1.414l-2-2a1 1 0 01.707-1.707zM14.95 11.636a1 1 0 01.707 1.707l-2 2a1 1 0 01-1.414-1.414l2-2a1 1 0 01.707-.293zM10 15a1 1 0 011 1v2a1 1 0 11-2 0v-2a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
                 </button>
             </div>
         </nav>
 
-        <!-- Konsul Si Mbok Chat Modal -->
-        <div id="chat-modal" class="absolute inset-0 bg-white z-30 flex-col h-full" style="display: none;">
-            <header class="p-4 flex items-center gap-4 border-b">
-                <button id="close-chat-btn"><i data-lucide="x"></i></button>
-                <h2 class="text-xl font-bold text-brand-deep-brown">Konsul Si Mbok</h2>
-            </header>
-            <div id="chat-messages" class="flex-grow p-4 space-y-4 overflow-y-auto flex flex-col">
-                <!-- Chat messages will be injected here -->
+        <!-- Product Modal -->
+        <div id="product-modal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 hidden">
+            <div id="product-modal-content" class="bg-white rounded-xl shadow-2xl p-6 w-11/12 max-w-sm">
+                <!-- Modal content will be injected here -->
             </div>
-            <footer class="p-4 border-t bg-white">
-                <div id="chat-input-container" class="flex items-center gap-2">
-                    <input type="text" id="chat-input" placeholder="Tell me how you feel..." class="w-full p-2 border rounded-full">
-                    <button id="chat-send-btn" class="bg-brand-deep-brown text-white p-2 rounded-full"><i data-lucide="send"></i></button>
-                </div>
-                 <div id="chat-options-container" class="hidden flex-col gap-2">
-                    <!-- Yes/No buttons will appear here -->
-                </div>
-            </footer>
         </div>
-
     </div>
 
-    <script>
-        // --- DATABASE ---
-        const db = {
-            products: [
-                { id: 1, name: 'Jahe Wangi', category: 'panas', price: 10000, popular: true, img: 'https://placehold.co/300x300/AE6E4E/F5F5DD?text=Jahe+Wangi' },
-                { id: 2, name: 'Kopi Rempah', category: 'panas', price: 12000, popular: false, img: 'https://placehold.co/300x300/AE6E4E/F5F5DD?text=Kopi+Rempah' },
-                { id: 3, name: 'Kunir Asem', category: 'dingin', price: 8000, popular: true, img: 'https://placehold.co/300x300/CC9767/F5F5DD?text=Kunir+Asem' },
-                { id: 4, name: 'Beras Kencur', category: 'dingin', price: 8000, popular: false, img: 'https://placehold.co/300x300/CC9767/F5F5DD?text=Beras+Kencur' },
-                { id: 5, name: 'Es Kopi Kayu Manis', category: 'dingin', price: 15000, popular: true, img: 'https://placehold.co/300x300/CC9767/F5F5DD?text=Es+Kopi' },
-                { id: 6, name: 'Panada (isi 3)', category: 'kudapan', price: 15000, popular: true, img: 'https://placehold.co/300x300/A57A5A/F5F5DD?text=Panada', description: "A deep-fried, crescent-shaped savory bread from Manado filled with spicy shredded tuna. A single portion contains 3 pieces." },
-                { id: 7, name: 'Timus Ubi Ungu', category: 'kudapan', price: 12000, popular: false, img: 'https://placehold.co/300x300/A57A5A/F5F5DD?text=Timus', description: "A vibrant purple, chewy, and sweet deep-fried snack made from mashed purple sweet potatoes. A single portion contains 3 pieces." },
-                { id: 8, name: 'Pisang Epe', category: 'kudapan', price: 10000, popular: false, img: 'https://placehold.co/300x300/A57A5A/F5F5DD?text=Pisang+Epe', description: "A street food from Makassar featuring grilled, flattened bananas served with a sweet palm sugar sauce." },
-            ],
-            herbs: [
-                { name: 'Jahe', price: 0 }, { name: 'Kencur', price: 2000 }, { name: 'Kunyit', price: 5000 }, 
-                { name: 'Temulawak', price: 3000 }, { name: 'Cengkeh', price: 7000 }, { name: 'Sereh', price: 7000 },
-                { name: 'Kayu Manis', price: 0 }, { name: 'Secang', price: 0 }, { name: 'Sambiloto', price: 0 }
-            ]
+    <script type="module">
+        // --- MOCK DATA & CONSTANTS ---
+        const POPULAR_PRODUCTS = [
+            { id: 'item1', name: 'Bir Pletok', category: 'Hot Drinks', image: 'https://placehold.co/600x400/854d0e/ffffff?text=Bir+Pletok', price: 25000, type: 'drink' },
+            { id: 'item2', name: 'Panada', category: 'Snacks', image: 'https://placehold.co/600x400/eab308/ffffff?text=Panada', price: 10000, type: 'snack' },
+            { id: 'item3', name: 'Kunyit Asam', category: 'Hot Drinks', image: 'https://placehold.co/600x400/f59e0b/ffffff?text=Kunyit+Asam', price: 22000, type: 'drink' },
+            { id: 'item4', name: 'Lemper Ayam', category: 'Snacks', image: 'https://placehold.co/600x400/78350f/ffffff?text=Lemper', price: 12000, type: 'snack_simple' },
+        ];
+        const REMPAH_OPTIONS = ["Ginger", "Turmeric", "Galangal", "Sappanwood", "Cinnamon", "Sugar", "Lime", "Cloves", "Nutmeg", "Javanese Ginger", "Lemongrass", "Cardamom"];
+        const PRICES = { regular: 14000, xtra: 29000, diabeticSugar: 5000, adminFee: 1000, sambal: 500 };
+
+        // --- APPLICATION STATE ---
+        let state = {
+            screen: 'home',
+            cart: [],
+            savedRecipes: [],
+            transactionHistory: [],
+            meramuOrder: { temp: 'Hot', size: 'Regular', ingredients: [], iceLevel: 'Normal Ice', sugar: 'White Sugar', name: '' },
+            meramuStep: 1,
+            botMessages: [{ from: 'bot', text: "How do you feel?" }],
+            botStage: 'ask',
+            botUserInput: '',
         };
 
-        // --- STATE ---
-        let cart = [];
-        let currentProduct = null;
-        let currentCategory = null;
-        let racikanState = {};
-        let chatState = 'START';
-
         // --- DOM ELEMENTS ---
-        const screens = document.querySelectorAll('.screen');
-        const navButtons = document.querySelectorAll('.nav-btn');
-        const categoryButtons = document.querySelectorAll('.category-btn');
-        const popularItemsContainer = document.getElementById('popular-items');
-        const categoryItemsGrid = document.getElementById('category-items-grid');
-        const categoryTitle = document.getElementById('category-title');
-        const productDetailScreen = document.getElementById('product-detail-screen');
-        const productDetailsContent = document.getElementById('product-details-content');
-        const backToCategoryBtn = document.getElementById('back-to-category-btn');
-        const addToCartBtn = document.getElementById('add-to-cart-btn');
-        const cartItemsContainer = document.getElementById('cart-items-container');
-        const cartTotalPriceEl = document.getElementById('cart-total-price');
-        const cartBadge = document.getElementById('cart-badge');
-        
-        // Racikan elements
-        const racikanScreen = document.getElementById('racikan-screen');
-        const racikanHerbsContainer = document.getElementById('racikan-herbs');
-        const racikanTotalPriceEl = document.getElementById('racikan-total-price');
-        const addRacikanToCartBtn = document.getElementById('add-racikan-to-cart-btn');
+        const mainContent = document.getElementById('main-content');
+        const bottomNav = document.getElementById('bottom-nav');
+        const productModal = document.getElementById('product-modal');
+        const productModalContent = document.getElementById('product-modal-content');
 
-        // Chat elements
-        const konsulBtn = document.getElementById('konsul-btn');
-        const chatModal = document.getElementById('chat-modal');
-        const closeChatBtn = document.getElementById('close-chat-btn');
-        const chatMessages = document.getElementById('chat-messages');
-        const chatInputContainer = document.getElementById('chat-input-container');
-        const chatInput = document.getElementById('chat-input');
-        const chatSendBtn = document.getElementById('chat-send-btn');
-        const chatOptionsContainer = document.getElementById('chat-options-container');
+        // --- HELPER FUNCTIONS ---
+        const formatCurrency = (value) => `Rp ${value.toLocaleString('id-ID')}`;
+        const getArrowIcon = () => `<svg class="w-6 h-6 text-amber-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>`;
 
-        // --- FUNCTIONS ---
-
-        function formatCurrency(amount) {
-            return `Rp ${amount.toLocaleString('id-ID')}`;
+        // --- STATE & NAVIGATION ---
+        function navigateTo(screenName) {
+            state.screen = screenName;
+            renderApp();
         }
 
-        function navigateTo(screenId) {
-            screens.forEach(screen => {
-                screen.classList.toggle('active', screen.id === screenId);
-            });
-            // Update nav button active state
-            navButtons.forEach(btn => {
-                 const target = btn.dataset.target;
-                 if (target === screenId) {
-                     btn.classList.remove('text-brand-muted-brown');
-                     btn.classList.add('text-brand-deep-brown');
-                 } else {
-                     btn.classList.remove('text-brand-deep-brown');
-                     btn.classList.add('text-brand-muted-brown');
-                 }
+        function updateMeramuOrder(newValues) {
+            state.meramuOrder = { ...state.meramuOrder, ...newValues };
+        }
+
+        // --- RENDERING LOGIC ---
+        function renderApp() {
+            // Clear previous content
+            mainContent.innerHTML = '';
+            
+            // Show/hide bottom nav
+            bottomNav.style.display = state.screen === 'meramu' ? 'none' : 'block';
+
+            // Render the current screen
+            switch (state.screen) {
+                case 'home':
+                    mainContent.innerHTML = renderHomeScreen();
+                    addHomeScreenListeners();
+                    break;
+                case 'meramu':
+                    renderMeramuFlow();
+                    break;
+                case 'cart':
+                    mainContent.innerHTML = renderCartScreen();
+                    addCartScreenListeners();
+                    break;
+                case 'bot':
+                    mainContent.innerHTML = renderBotScreen();
+                    addBotScreenListeners();
+                    break;
+                case 'recipe':
+                    mainContent.innerHTML = renderRecipeScreen();
+                    addRecipeScreenListeners();
+                    break;
+                case 'orders':
+                    mainContent.innerHTML = renderOrdersScreen();
+                    break;
+                // Add other screens like voucher, account as needed
+                default:
+                    mainContent.innerHTML = renderHomeScreen();
+                    addHomeScreenListeners();
+            }
+            updateNavActiveState();
+        }
+
+        function updateNavActiveState() {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                const svg = item.querySelector('svg');
+                const span = item.querySelector('span');
+                if (item.dataset.screen === state.screen) {
+                    svg?.classList.remove('text-gray-400');
+                    svg?.classList.add('text-amber-800');
+                    span?.classList.remove('text-gray-400');
+                    span?.classList.add('text-amber-800');
+                } else {
+                    svg?.classList.remove('text-amber-800');
+                    svg?.classList.add('text-gray-400');
+                    span?.classList.remove('text-amber-800');
+                    span?.classList.add('text-gray-400');
+                }
             });
         }
         
-        function renderPopularItems() {
-            const popularProducts = db.products.filter(p => p.popular);
-            popularItemsContainer.innerHTML = popularProducts.map(product => `
-                <div class="product-card flex-shrink-0 w-40" data-product-id="${product.id}">
-                    <img src="${product.img}" alt="${product.name}" class="w-full h-28 object-cover rounded-2xl mb-2">
-                    <h4 class="font-semibold text-brand-deep-brown truncate">${product.name}</h4>
-                    <p class="text-sm text-brand-muted-brown">${formatCurrency(product.price)}</p>
+        // --- SCREEN TEMPLATES & LISTENERS ---
+
+        // HomeScreen
+        function renderHomeScreen() {
+            const productCards = POPULAR_PRODUCTS.map(item => `
+                <div data-product-id="${item.id}" class="product-card bg-white rounded-xl shadow p-3 flex-shrink-0 w-40 cursor-pointer">
+                    <img src="${item.image}" alt="${item.name}" class="w-full h-24 rounded-lg object-cover mb-3 pointer-events-none" />
+                    <h4 class="font-bold text-amber-900 truncate pointer-events-none">${item.name}</h4>
+                    <p class="font-bold text-amber-700 text-sm pointer-events-none">${formatCurrency(item.price)}</p>
                 </div>
             `).join('');
-        }
 
-        function renderCategoryItems(category) {
-            currentCategory = category;
-            const categoryProducts = db.products.filter(p => p.category === category);
-            categoryTitle.textContent = category.charAt(0).toUpperCase() + category.slice(1);
-            categoryItemsGrid.innerHTML = categoryProducts.map(product => `
-                <div class="product-card" data-product-id="${product.id}">
-                    <img src="${product.img}" alt="${product.name}" class="w-full h-32 object-cover rounded-2xl mb-2">
-                    <h4 class="font-semibold text-brand-deep-brown truncate">${product.name}</h4>
-                    <p class="text-sm text-brand-muted-brown">${formatCurrency(product.price)}</p>
-                </div>
-            `).join('');
-            navigateTo('category-screen');
-        }
-
-        function renderProductDetails(productId) {
-            const product = db.products.find(p => p.id === parseInt(productId));
-            if (!product) return;
-            currentProduct = { ...product, options: {}, quantity: 1 };
-
-            let optionsHtml = '';
-            if (product.category === 'panas' || product.category === 'dingin') {
-                optionsHtml = `
-                    <div class="space-y-4">
-                        ${product.category === 'dingin' ? `
-                        <div>
-                            <h4 class="font-bold text-brand-muted-brown mb-2">Size</h4>
-                            <div class="flex gap-2" data-option-key="size">
-                                <button class="option-btn active" data-value="regular" data-price="0">Regular</button>
-                                <button class="option-btn" data-value="extra" data-price="5000">Extra (+${formatCurrency(5000)})</button>
-                            </div>
-                        </div>` : ''}
-                        <div>
-                            <h4 class="font-bold text-brand-muted-brown mb-2">Sugar</h4>
-                            <div class="flex gap-2" data-option-key="sugar">
-                                <button class="option-btn active" data-value="normal" data-price="0">Normal</button>
-                                <button class="option-btn" data-value="diabetic" data-price="5000">Diabetic (+${formatCurrency(5000)})</button>
+            return `
+                <div class="bg-orange-50 min-h-screen">
+                    <header class="bg-amber-800 text-white p-5 rounded-b-3xl shadow-lg">
+                        <div class="flex justify-between items-center mb-4">
+                            <h1 class="text-2xl font-bold tracking-wider">MERAMU</h1>
+                            <div class="bg-white text-amber-800 font-bold px-4 py-1 rounded-full text-sm shadow-md">23 POIN</div>
+                        </div>
+                        <p class="text-lg font-light">Hi, Simbok!</p>
+                    </header>
+                    <div class="p-5">
+                        <div class="mb-8">
+                            <h3 class="text-xl font-bold text-amber-900 mb-3">Category</h3>
+                            <div class="grid grid-cols-4 gap-3 text-center">
+                                <button class="bg-white p-3 rounded-lg shadow"><span class="text-2xl">🔥</span><p class="font-semibold text-sm text-amber-800">Hot</p></button>
+                                <button class="bg-white p-3 rounded-lg shadow"><span class="text-2xl">❄️</span><p class="font-semibold text-sm text-amber-800">Ice</p></button>
+                                <button class="bg-white p-3 rounded-lg shadow"><span class="text-2xl">🥐</span><p class="font-semibold text-sm text-amber-800">Food</p></button>
+                                <button id="recipe-btn" class="bg-white p-3 rounded-lg shadow"><span class="text-2xl">📜</span><p class="font-semibold text-sm text-amber-800">Recipe</p></button>
                             </div>
                         </div>
                         <div>
-                            <h4 class="font-bold text-brand-muted-brown mb-2">Sugar Level</h4>
-                            <div class="flex gap-2" data-option-key="sugar_level">
-                                <button class="option-btn active" data-value="normal" data-price="0">Normal</button>
-                                <button class="option-btn" data-value="less" data-price="0">Less</button>
-                                <button class="option-btn" data-value="no_sugar" data-price="0">No Sugar</button>
+                            <div class="flex justify-between items-center mb-3">
+                                <h3 class="text-xl font-bold text-amber-900">Popular Now!</h3>
+                                <button id="konsul-btn" class="flex flex-col items-center text-center">
+                                    <div class="w-14 h-14 bg-white rounded-full shadow-md flex items-center justify-center">
+                                        <span class="text-3xl">🤖</span>
+                                    </div>
+                                    <p class="text-xs font-semibold text-amber-800 mt-1">Konsul<br/>Si Mbok</p>
+                                </button>
                             </div>
+                            <div class="flex space-x-4 overflow-x-auto pb-4 -mx-5 px-5 scrollbar-hide">
+                                ${productCards}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        function addHomeScreenListeners() {
+            document.getElementById('konsul-btn').addEventListener('click', () => navigateTo('bot'));
+            document.getElementById('recipe-btn').addEventListener('click', () => navigateTo('recipe'));
+            document.querySelectorAll('.product-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const productId = card.dataset.productId;
+                    const product = POPULAR_PRODUCTS.find(p => p.id === productId);
+                    if (product.type === 'snack_simple') {
+                        addToCart(product);
+                    } else {
+                        openProductModal(product);
+                    }
+                });
+            });
+        }
+
+        // Meramu Flow
+        function renderMeramuFlow() {
+            const stepIndicator = (currentStep) => {
+                const steps = ['Size', 'Ingredients', 'Finalize'];
+                return `
+                    <div class="flex justify-center items-center space-x-2 mb-6">
+                        ${steps.map((step, index) => `
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 rounded-full flex items-center justify-center font-bold ${index + 1 <= currentStep ? 'bg-amber-800 text-white' : 'bg-gray-200 text-gray-500'}">
+                                    ${index + 1}
+                                </div>
+                                ${index < steps.length - 1 ? `<div class="h-1 w-12 ${index + 1 < currentStep ? 'bg-amber-800' : 'bg-gray-200'}"></div>` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            };
+
+            let content = '';
+            if (state.meramuStep === 1) {
+                const isHot = state.meramuOrder.temp === 'Hot';
+                content = `
+                    <div class="p-5 bg-orange-50 min-h-screen">
+                        <button id="meramu-back-home" class="mb-4 p-2 rounded-full bg-white shadow">${getArrowIcon()}</button>
+                        ${stepIndicator(1)}
+                        <h2 class="text-2xl font-bold text-amber-900 text-center mb-6">Choose Temperature & Size</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <h3 class="font-semibold text-amber-800 mb-2">Temperature</h3>
+                                <div class="flex gap-4">
+                                    <button data-temp="Hot" class="meramu-temp flex-1 p-4 rounded-lg font-bold text-center ${state.meramuOrder.temp === 'Hot' ? 'bg-amber-800 text-white' : 'bg-white'}">Hot</button>
+                                    <button data-temp="Ice" class="meramu-temp flex-1 p-4 rounded-lg font-bold text-center ${state.meramuOrder.temp === 'Ice' ? 'bg-amber-800 text-white' : 'bg-white'}">Ice</button>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-amber-800 mb-2">Size</h3>
+                                <div class="flex gap-4">
+                                    <button data-size="Regular" class="meramu-size flex-1 p-4 rounded-lg font-bold text-center ${state.meramuOrder.size === 'Regular' ? 'bg-amber-800 text-white' : 'bg-white'}">Regular (${formatCurrency(PRICES.regular)})</button>
+                                    ${!isHot ? `<button data-size="Xtra" class="meramu-size flex-1 p-4 rounded-lg font-bold text-center ${state.meramuOrder.size === 'Xtra' ? 'bg-amber-800 text-white' : 'bg-white'}">Xtra (${formatCurrency(PRICES.xtra)})</button>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                        <button id="meramu-next" class="w-full mt-8 bg-amber-900 text-white font-bold py-4 rounded-xl text-lg">Next</button>
+                    </div>
+                `;
+            } else if (state.meramuStep === 2) {
+                content = `
+                    <div class="p-5 bg-orange-50 min-h-screen">
+                        <button id="meramu-prev" class="mb-4 p-2 rounded-full bg-white shadow">${getArrowIcon()}</button>
+                        ${stepIndicator(2)}
+                        <h2 class="text-2xl font-bold text-amber-900 text-center mb-2">Choose Ingredients</h2>
+                        <p class="text-center text-amber-800 mb-6">Maximum 5 selections</p>
+                        <div class="grid grid-cols-3 gap-4 mb-8">
+                            ${REMPAH_OPTIONS.map(rempah => `<button data-ingredient="${rempah}" class="meramu-ingredient p-4 rounded-xl text-center font-semibold ${state.meramuOrder.ingredients.includes(rempah) ? 'bg-amber-800 text-white' : 'bg-white'}">${rempah}</button>`).join('')}
+                        </div>
+                        <button id="meramu-next" ${state.meramuOrder.ingredients.length === 0 ? 'disabled' : ''} class="w-full mt-8 bg-amber-900 text-white font-bold py-4 rounded-xl text-lg disabled:bg-gray-300">Next (${state.meramuOrder.ingredients.length}/5)</button>
+                    </div>
+                `;
+            } else if (state.meramuStep === 3) {
+                const isIce = state.meramuOrder.temp === 'Ice';
+                content = `
+                    <div class="p-5 bg-orange-50 min-h-screen">
+                        <button id="meramu-prev" class="mb-4 p-2 rounded-full bg-white shadow">${getArrowIcon()}</button>
+                        ${stepIndicator(3)}
+                        <h2 class="text-2xl font-bold text-amber-900 text-center mb-6">Final Touches</h2>
+                        <div class="space-y-6">
+                            ${isIce ? `
+                                <div>
+                                    <h3 class="font-semibold text-amber-800 mb-2">Ice Level</h3>
+                                    <div class="grid grid-cols-3 gap-2">
+                                        ${['Less Ice', 'Normal Ice', 'Extra Ice'].map(level => `<button data-ice="${level}" class="meramu-ice p-3 rounded-lg font-semibold ${state.meramuOrder.iceLevel === level ? 'bg-amber-800 text-white' : 'bg-white'}">${level.replace(' Ice', '')}</button>`).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
+                            <div>
+                                <h3 class="font-semibold text-amber-800 mb-2">Sugar Type</h3>
+                                <div class="grid grid-cols-3 gap-2">
+                                    ${['Palm Sugar', 'White Sugar'].map(sugar => `<button data-sugar="${sugar}" class="meramu-sugar p-3 rounded-lg font-semibold ${state.meramuOrder.sugar === sugar ? 'bg-amber-800 text-white' : 'bg-white'}">${sugar.replace(' Sugar', '')}</button>`).join('')}
+                                    <button data-sugar="Diabetic Sugar" class="meramu-sugar p-3 rounded-lg font-semibold ${state.meramuOrder.sugar === 'Diabetic Sugar' ? 'bg-amber-800 text-white' : 'bg-white'}">Diabetic (+${formatCurrency(PRICES.diabeticSugar)})</button>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-amber-800 mb-2">Name Your Drink (Optional)</h3>
+                                <input id="meramu-name" type="text" value="${state.meramuOrder.name}" class="w-full p-3 bg-white rounded-lg" placeholder="e.g., Budi's Power Potion" />
+                            </div>
+                        </div>
+                        <button id="meramu-finish" class="w-full mt-8 bg-amber-900 text-white font-bold py-4 rounded-xl text-lg">Add to Cart</button>
+                    </div>
+                `;
+            }
+            mainContent.innerHTML = content;
+            addMeramuListeners();
+        }
+        function addMeramuListeners() {
+            document.getElementById('meramu-back-home')?.addEventListener('click', () => navigateTo('home'));
+            document.getElementById('meramu-next')?.addEventListener('click', () => {
+                state.meramuStep++;
+                renderMeramuFlow();
+            });
+            document.getElementById('meramu-prev')?.addEventListener('click', () => {
+                state.meramuStep--;
+                renderMeramuFlow();
+            });
+            document.querySelectorAll('.meramu-temp').forEach(btn => btn.addEventListener('click', e => {
+                updateMeramuOrder({ temp: e.target.dataset.temp, size: 'Regular' });
+                renderMeramuFlow();
+            }));
+            document.querySelectorAll('.meramu-size').forEach(btn => btn.addEventListener('click', e => {
+                updateMeramuOrder({ size: e.target.dataset.size });
+                renderMeramuFlow();
+            }));
+            document.querySelectorAll('.meramu-ingredient').forEach(btn => btn.addEventListener('click', e => {
+                const ingredient = e.target.dataset.ingredient;
+                const currentIngredients = state.meramuOrder.ingredients;
+                if (currentIngredients.includes(ingredient)) {
+                    updateMeramuOrder({ ingredients: currentIngredients.filter(i => i !== ingredient) });
+                } else if (currentIngredients.length < 5) {
+                    updateMeramuOrder({ ingredients: [...currentIngredients, ingredient] });
+                }
+                renderMeramuFlow();
+            }));
+            document.querySelectorAll('.meramu-ice').forEach(btn => btn.addEventListener('click', e => {
+                updateMeramuOrder({ iceLevel: e.target.dataset.ice });
+                renderMeramuFlow();
+            }));
+            document.querySelectorAll('.meramu-sugar').forEach(btn => btn.addEventListener('click', e => {
+                updateMeramuOrder({ sugar: e.target.dataset.sugar });
+                renderMeramuFlow();
+            }));
+            document.getElementById('meramu-name')?.addEventListener('input', e => {
+                updateMeramuOrder({ name: e.target.value });
+            });
+            document.getElementById('meramu-finish')?.addEventListener('click', () => {
+                let price = state.meramuOrder.size === 'Regular' ? PRICES.regular : PRICES.xtra;
+                if (state.meramuOrder.sugar === 'Diabetic Sugar') price += PRICES.diabeticSugar;
+                const finalOrder = { 
+                    ...state.meramuOrder, 
+                    id: `meramu-${Date.now()}`, 
+                    name: state.meramuOrder.name || 'Your Jamu', 
+                    price, 
+                    date: new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }) 
+                };
+                addToCart(finalOrder);
+                // Reset for next time
+                state.meramuStep = 1;
+                state.meramuOrder = { temp: 'Hot', size: 'Regular', ingredients: [], iceLevel: 'Normal Ice', sugar: 'White Sugar', name: '' };
+            });
+        }
+        
+        // Cart Screen
+        function renderCartScreen() {
+            if (state.cart.length === 0) {
+                return `
+                    <div class="p-5 bg-orange-50 min-h-screen text-center flex flex-col justify-center items-center">
+                        <h2 class="text-2xl font-bold text-amber-900 mb-4">Cart is Empty</h2>
+                        <button id="cart-back-home" class="bg-amber-800 text-white font-semibold py-2 px-6 rounded-lg">Back to Home</button>
+                    </div>
+                `;
+            }
+            const item = state.cart[0]; // Assuming one item cart
+            const deliveryCost = state.delivery === 'GrabSend' ? 15000 : 0;
+            const total = item.price + PRICES.adminFee + deliveryCost;
+
+            return `
+                <div class="p-5 bg-orange-50 min-h-screen">
+                    <button id="cart-back" class="mb-4 p-2 rounded-full bg-white shadow">${getArrowIcon()}</button>
+                    <h2 class="text-2xl font-bold text-amber-900 text-center mb-6">Your Order</h2>
+                    <div class="bg-white p-5 rounded-xl shadow space-y-3">
+                        <div class="flex justify-between font-bold"><p>${item.name}</p><p>${formatCurrency(item.price)}</p></div>
+                        <p class="text-sm text-gray-500 border-b pb-3">${item.ingredients.join(', ')}</p>
+                        <div class="flex justify-between text-gray-600"><p>Admin Fee</p><p>${formatCurrency(PRICES.adminFee)}</p></div>
+                        <div class="flex justify-between text-gray-600"><p>Delivery Cost</p><p>${formatCurrency(deliveryCost)}</p></div>
+                        <div class="flex justify-between font-bold text-xl border-t pt-3"><p>Total Payment</p><p>${formatCurrency(total)}</p></div>
+                    </div>
+                    <!-- Form fields would go here -->
+                    <button id="pay-now" class="w-full mt-8 bg-amber-900 text-white font-bold py-4 rounded-xl text-lg">Pay Now</button>
+                </div>
+            `;
+        }
+        function addCartScreenListeners() {
+            document.getElementById('cart-back-home')?.addEventListener('click', () => navigateTo('home'));
+            document.getElementById('cart-back')?.addEventListener('click', () => {
+                const item = state.cart[0];
+                const backScreen = item.id.startsWith('meramu') ? 'meramu' : 'home';
+                navigateTo(backScreen);
+            });
+            document.getElementById('pay-now')?.addEventListener('click', () => {
+                const item = state.cart[0];
+                const total = item.price + PRICES.adminFee + (state.delivery === 'GrabSend' ? 15000 : 0);
+                const transaction = {
+                    ...item,
+                    totalPrice: total,
+                    status: 'Order Received',
+                    date: new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })
+                };
+                state.transactionHistory.push(transaction);
+                state.cart = [];
+                navigateTo('orders');
+            });
+        }
+
+        // Bot Screen
+        function renderBotScreen() {
+            const messagesHtml = state.botMessages.map(msg => `
+                <div class="flex ${msg.from === 'bot' ? 'justify-start' : 'justify-end'}">
+                    <div class="p-3 rounded-lg max-w-xs ${msg.from === 'bot' ? 'bg-white shadow' : 'bg-amber-800 text-white'}">${msg.text}</div>
+                </div>
+            `).join('');
+
+            let controlsHtml = '';
+            if (state.botStage === 'ask') {
+                controlsHtml = `
+                    <div class="mt-4 flex gap-2">
+                        <input type="text" id="bot-input" value="${state.botUserInput}" placeholder="Describe your feelings..." class="w-full p-3 bg-white rounded-lg"/>
+                        <button id="bot-send" class="bg-amber-900 text-white font-bold py-3 px-5 rounded-lg">Send</button>
+                    </div>`;
+            } else if (state.botStage === 'ask_save') {
+                controlsHtml = `
+                    <div class="mt-4 flex gap-2">
+                        <button id="bot-save-recipe" class="flex-1 bg-amber-800 text-white font-bold py-3 rounded-lg">Yes, save it</button>
+                        <button id="bot-no-thanks" class="flex-1 bg-gray-200 text-gray-700 font-bold py-3 rounded-lg">No, thanks</button>
+                    </div>`;
+            } else if (state.botStage === 'saved') {
+                controlsHtml = `<button id="bot-end-chat" class="w-full mt-4 bg-amber-900 text-white font-bold py-4 rounded-xl text-lg">End Chat</button>`;
+            }
+
+            return `
+                <div class="p-5 bg-orange-50 min-h-screen flex flex-col">
+                    <div class="flex items-center mb-6">
+                        <button id="bot-back-home" class="p-2 rounded-full bg-white shadow">${getArrowIcon()}</button>
+                        <h2 class="text-2xl font-bold text-amber-900 text-center flex-1">Klinik Si Mbok Jamu</h2>
+                    </div>
+                    <div class="flex-grow space-y-4 overflow-y-auto pb-4">${messagesHtml}</div>
+                    ${controlsHtml}
+                </div>
+            `;
+        }
+        function addBotScreenListeners() {
+            document.getElementById('bot-back-home')?.addEventListener('click', () => navigateTo('home'));
+            const input = document.getElementById('bot-input');
+            input?.addEventListener('input', e => state.botUserInput = e.target.value);
+            
+            const handleSend = () => {
+                if (!state.botUserInput.trim()) return;
+                state.botMessages.push({ from: 'you', text: state.botUserInput });
+                state.botUserInput = '';
+                state.botStage = 'diagnosing';
+                renderApp();
+
+                setTimeout(() => {
+                    state.botMessages.push({ from: 'bot', text: "Diagnosing..." });
+                    renderApp();
+                }, 500);
+                setTimeout(() => {
+                    state.botMessages.push({ from: 'bot', text: "Here's your health complaint: Fatigue and a slight cold." });
+                    state.botMessages.push({ from: 'bot', text: "Recipe Suggestion: A warm blend of Ginger, Lemongrass, and Cinnamon." });
+                    renderApp();
+                }, 1500);
+                setTimeout(() => {
+                    state.botMessages.push({ from: 'bot', text: "Do you wish to save this recipe?" });
+                    state.botStage = 'ask_save';
+                    renderApp();
+                }, 2500);
+            };
+
+            document.getElementById('bot-send')?.addEventListener('click', handleSend);
+            input?.addEventListener('keypress', e => { if (e.key === 'Enter') handleSend(); });
+
+            document.getElementById('bot-save-recipe')?.addEventListener('click', () => {
+                const recipeNumber = `#SIMBOK${String(state.savedRecipes.length + 1).padStart(3, '0')}`;
+                state.savedRecipes.push({
+                    id: recipeNumber, name: 'Anti Rusing', date: new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }),
+                    ingredients: ['Ginger', 'Lemongrass', 'Cinnamon'], type: 'Simbok'
+                });
+                state.botMessages.push({ from: 'you', text: "Yes" });
+                state.botMessages.push({ from: 'bot', text: `OK! Here's your recipe number: ${recipeNumber}` });
+                state.botStage = 'saved';
+                renderApp();
+            });
+            document.getElementById('bot-no-thanks')?.addEventListener('click', () => navigateTo('home'));
+            document.getElementById('bot-end-chat')?.addEventListener('click', () => navigateTo('home'));
+        }
+
+        // --- MODAL LOGIC ---
+        function openProductModal(product) {
+            let optionsHtml = '';
+            if (product.type === 'drink') {
+                optionsHtml = `
+                    <div class="mb-4">
+                        <h4 class="font-semibold text-amber-800 mb-2">Pilih Gula</h4>
+                        <div class="flex gap-2">
+                            <button data-option="White Sugar" class="modal-option-drink flex-1 p-3 rounded-lg font-semibold text-sm bg-amber-800 text-white">White Sugar</button>
+                            <button data-option="Palm Sugar" class="modal-option-drink flex-1 p-3 rounded-lg font-semibold text-sm bg-gray-200">Palm Sugar</button>
+                        </div>
+                    </div>
+                `;
+            } else if (product.type === 'snack') {
+                optionsHtml = `
+                    <div class="mb-4">
+                        <h4 class="font-semibold text-amber-800 mb-2">Pilih Sambal</h4>
+                        <div class="space-y-2">
+                             <button data-option="Tanpa Sambal" class="modal-option-snack w-full p-3 rounded-lg font-semibold text-left bg-amber-800 text-white">Tanpa Sambal</button>
+                             <button data-option="Sambal Roa" class="modal-option-snack w-full p-3 rounded-lg font-semibold text-left bg-gray-200">Sambal Roa (+${formatCurrency(PRICES.sambal)})</button>
+                             <button data-option="Sambal Kecap" class="modal-option-snack w-full p-3 rounded-lg font-semibold text-left bg-gray-200">Sambal Kecap (+${formatCurrency(PRICES.sambal)})</button>
                         </div>
                     </div>
                 `;
             }
 
-            productDetailsContent.innerHTML = `
-                <img src="${product.img}" alt="${product.name}" class="w-full h-60 object-cover rounded-3xl mb-4">
-                <div class="px-1">
-                    <h2 class="text-3xl font-bold text-brand-deep-brown mb-2">${product.name}</h2>
-                    <p class="text-xl text-brand-muted-brown mb-4">${formatCurrency(product.price)}</p>
-                    ${product.description ? `<p class="text-brand-muted-brown mb-6">${product.description}</p>` : ''}
-                    ${optionsHtml}
+            productModalContent.innerHTML = `
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold text-amber-900">${product.name}</h3>
+                    <button id="modal-close-btn" class="text-gray-500 hover:text-gray-800">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
                 </div>
+                <img src="${product.image}" alt="${product.name}" class="w-full h-40 rounded-lg object-cover mb-4" />
+                ${optionsHtml}
+                <button id="modal-add-to-cart-btn" class="w-full bg-amber-900 text-white font-bold py-3 rounded-xl text-lg hover:bg-amber-800 transition-colors">
+                    Add to Cart
+                </button>
             `;
-            updateProductPrice();
-            navigateTo('product-detail-screen');
+            productModal.classList.remove('hidden');
+            addModalListeners(product);
         }
 
-        function updateProductPrice() {
-            if (!currentProduct) return;
-            let total = currentProduct.price;
-            for (const key in currentProduct.options) {
-                total += currentProduct.options[key].price;
-            }
-            document.getElementById('product-total-price').textContent = formatCurrency(total);
-        }
+        function addModalListeners(product) {
+            let selectedOption = product.type === 'drink' ? 'White Sugar' : 'Tanpa Sambal';
 
-        function updateCart() {
-            if (cart.length === 0) {
-                cartItemsContainer.innerHTML = `<p class="text-center text-gray-500">Your cart is empty.</p>`;
-            } else {
-                cartItemsContainer.innerHTML = cart.map((item, index) => `
-                    <div class="flex items-center gap-4 mb-4 p-2 rounded-lg border">
-                        <img src="${item.img}" class="w-16 h-16 object-cover rounded-md">
-                        <div class="flex-grow">
-                            <p class="font-bold text-brand-deep-brown">${item.name}</p>
-                            <p class="text-sm text-gray-500">${item.options || formatCurrency(item.price)}</p>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <button class="quantity-btn p-1" data-index="${index}" data-change="-1"><i data-lucide="minus" class="w-4 h-4"></i></button>
-                            <span>${item.quantity}</span>
-                            <button class="quantity-btn p-1" data-index="${index}" data-change="1"><i data-lucide="plus" class="w-4 h-4"></i></button>
-                        </div>
-                    </div>
-                `).join('');
-            }
-            lucide.createIcons();
+            document.getElementById('modal-close-btn').addEventListener('click', () => productModal.classList.add('hidden'));
             
-            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            cartTotalPriceEl.textContent = formatCurrency(total);
+            document.querySelectorAll('.modal-option-drink').forEach(btn => btn.addEventListener('click', e => {
+                document.querySelectorAll('.modal-option-drink').forEach(b => b.classList.replace('bg-amber-800', 'bg-gray-200') || b.classList.remove('text-white'));
+                e.target.classList.replace('bg-gray-200', 'bg-amber-800');
+                e.target.classList.add('text-white');
+                selectedOption = e.target.dataset.option;
+            }));
 
-            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-            cartBadge.textContent = totalItems;
-            cartBadge.classList.toggle('hidden', totalItems === 0);
-        }
-        
-        function handleAddToCart() {
-            let finalPrice = currentProduct.price;
-            let optionsSummary = [];
-            for (const key in currentProduct.options) {
-                finalPrice += currentProduct.options[key].price;
-                optionsSummary.push(currentProduct.options[key].value);
-            }
-            
-            const cartItem = {
-                id: currentProduct.id,
-                name: currentProduct.name,
-                img: currentProduct.img,
-                price: finalPrice,
-                quantity: 1,
-                options: optionsSummary.join(', ')
-            };
-            
-            const existingItemIndex = cart.findIndex(item => item.id === cartItem.id && item.options === cartItem.options);
-            
-            if (existingItemIndex > -1) {
-                cart[existingItemIndex].quantity++;
-            } else {
-                cart.push(cartItem);
-            }
-            
-            updateCart();
-            navigateTo('cart-screen');
-        }
-        
-        function initRacikan() {
-            racikanHerbsContainer.innerHTML = db.herbs.map(herb => `
-                <button data-value="${herb.name}" data-price="${herb.price}" class="racikan-option p-2 border rounded-lg text-sm">${herb.name}</button>
-            `).join('');
+            document.querySelectorAll('.modal-option-snack').forEach(btn => btn.addEventListener('click', e => {
+                document.querySelectorAll('.modal-option-snack').forEach(b => b.classList.replace('bg-amber-800', 'bg-gray-200') || b.classList.remove('text-white'));
+                e.target.classList.replace('bg-gray-200', 'bg-amber-800');
+                e.target.classList.add('text-white');
+                selectedOption = e.target.dataset.option;
+            }));
 
-            racikanState = {
-                temp: { value: 'iced', price: 0 },
-                base: { value: 'water', price: 0 },
-                herbs: [],
-                sugar: { value: 'no_sugar', price: 0 }
-            };
-            updateRacikanPrice();
-        }
-
-        function updateRacikanPrice() {
-            let total = 0;
-            total += racikanState.temp.price;
-            total += racikanState.base.price;
-            total += racikanState.sugar.price;
-            racikanState.herbs.forEach(herb => total += herb.price);
-            racikanTotalPriceEl.textContent = formatCurrency(total);
-        }
-
-        function handleAddRacikanToCart() {
-            let finalPrice = 0;
-            let nameParts = [];
-
-            finalPrice += racikanState.temp.price;
-            finalPrice += racikanState.base.price;
-            racikanState.herbs.forEach(herb => { finalPrice += herb.price; });
-            finalPrice += racikanState.sugar.price;
-
-            const optionsDesc = [
-                racikanState.temp.value,
-                racikanState.base.value,
-                ...racikanState.herbs.map(h => h.value)
-            ].join(', ');
-
-            const cartItem = {
-                id: `racikan_${Date.now()}`,
-                name: "Jamu Racikan Sendiri",
-                img: 'https://placehold.co/300x300/8B4411/F5F5DD?text=Racikan',
-                price: finalPrice,
-                quantity: 1,
-                options: optionsDesc
-            };
-            cart.push(cartItem);
-            updateCart();
-            navigateTo('cart-screen');
-        }
-
-        // --- CHATBOT FUNCTIONS ---
-        function openChat() {
-            chatModal.style.display = 'flex';
-            startChat();
-        }
-
-        function closeChat() {
-            chatModal.style.display = 'none';
-        }
-
-        function addChatMessage(message, sender) {
-            const bubble = document.createElement('div');
-            bubble.textContent = message;
-            bubble.className = `p-3 rounded-2xl max-w-xs break-words chat-bubble-${sender}`;
-            chatMessages.appendChild(bubble);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        function showChatOptions(options) {
-            chatInputContainer.classList.add('hidden');
-            chatOptionsContainer.classList.remove('hidden');
-            chatOptionsContainer.innerHTML = options.map(opt => 
-                `<button class="chat-option-btn w-full p-2 rounded-lg bg-brand-beige text-white" data-value="${opt.value}">${opt.text}</button>`
-            ).join('');
-        }
-
-        function hideChatOptions() {
-            chatInputContainer.classList.remove('hidden');
-            chatOptionsContainer.classList.add('hidden');
-        }
-
-        function startChat() {
-            chatState = 'AWAITING_FEELING';
-            chatMessages.innerHTML = '';
-            hideChatOptions();
-            addChatMessage('Sugeng Rawuh, Si Mbok is here. How do you feel?', 'bot');
-        }
-
-        function handleChatResponse(response) {
-            switch(chatState) {
-                case 'AWAITING_FEELING':
-                    addChatMessage(response, 'user');
-                    chatState = 'DIAGNOSING';
-                    setTimeout(() => {
-                        addChatMessage('Diagnosing...', 'bot');
-                        setTimeout(() => {
-                            addChatMessage("Here's your health diagnosis... a recipe of Kunyit and Jahe would be good for you.", 'bot');
-                            addChatMessage('Do you wish to save the recipe?', 'bot');
-                            chatState = 'AWAITING_SAVE_RECIPE';
-                            showChatOptions([ {text: 'Yes', value: 'yes'}, {text: 'No', value: 'no'} ]);
-                        }, 1500);
-                    }, 1000);
-                    break;
-                case 'AWAITING_SAVE_RECIPE':
-                    addChatMessage(response === 'yes' ? 'Yes' : 'No', 'user');
-                    hideChatOptions();
-                    if (response === 'yes') {
-                        const recipeNumber = `#${Math.floor(1000 + Math.random() * 9000)}`;
-                        addChatMessage(`Saved! Here's your recipe number: ${recipeNumber}`, 'bot');
-                    }
-                    setTimeout(() => {
-                        addChatMessage('End Chat?', 'bot');
-                        chatState = 'AWAITING_END_CHAT';
-                        showChatOptions([ {text: 'Yes', value: 'yes'}, {text: 'No', value: 'no'} ]);
-                    }, 1000);
-                    break;
-                case 'AWAITING_END_CHAT':
-                     addChatMessage(response === 'yes' ? 'Yes' : 'No', 'user');
-                     hideChatOptions();
-                     if (response === 'yes') {
-                         closeChat();
-                     } else {
-                         startChat();
-                     }
-                    break;
-            }
-        }
-
-
-        // --- EVENT LISTENERS ---
-        navButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const targetScreen = button.dataset.target;
-                if (targetScreen) {
-                    navigateTo(targetScreen);
-                    if(targetScreen === 'cart-screen') updateCart();
+            document.getElementById('modal-add-to-cart-btn').addEventListener('click', () => {
+                let finalPrice = product.price;
+                let nameSuffix = '';
+                if (product.type === 'snack' && selectedOption !== 'Tanpa Sambal') {
+                    finalPrice += PRICES.sambal;
                 }
+                nameSuffix = `(${selectedOption})`;
+
+                addToCart({
+                    ...product,
+                    price: finalPrice,
+                    name: `${product.name} ${nameSuffix}`,
+                    ingredients: [product.category, selectedOption]
+                });
+                productModal.classList.add('hidden');
             });
-        });
-
-        categoryButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                renderCategoryItems(button.dataset.category);
-            });
-        });
-
-        document.body.addEventListener('click', (e) => {
-            const productCard = e.target.closest('.product-card');
-            if (productCard) {
-                renderProductDetails(productCard.dataset.productId);
-            }
-
-            const optionBtn = e.target.closest('.option-btn');
-            if (optionBtn) {
-                const parent = optionBtn.parentElement;
-                const key = parent.dataset.optionKey;
-                parent.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('active'));
-                optionBtn.classList.add('active');
-                currentProduct.options[key] = {
-                    value: optionBtn.dataset.value,
-                    price: parseInt(optionBtn.dataset.price)
-                };
-                updateProductPrice();
-            }
-
-            const quantityBtn = e.target.closest('.quantity-btn');
-            if (quantityBtn) {
-                const index = parseInt(quantityBtn.dataset.index);
-                const change = parseInt(quantityBtn.dataset.change);
-                cart[index].quantity += change;
-                if (cart[index].quantity <= 0) {
-                    cart.splice(index, 1);
-                }
-                updateCart();
-            }
-        });
+        }
         
-        backToCategoryBtn.addEventListener('click', () => {
-            if(currentCategory) {
-                navigateTo('category-screen');
-            } else {
-                navigateTo('home-screen');
-            }
-        });
+        function addToCart(item) {
+            state.cart = [item]; // Simple cart, replace item
+            navigateTo('cart');
+        }
 
-        addToCartBtn.addEventListener('click', handleAddToCart);
-        
-        racikanScreen.addEventListener('click', e => {
-            const optionBtn = e.target.closest('.racikan-option');
-            if (!optionBtn) return;
-
-            const parent = optionBtn.parentElement;
-            const value = optionBtn.dataset.value;
-            const price = parseInt(optionBtn.dataset.price);
-
-            if (parent.id === 'racikan-herbs') {
-                const isSelected = optionBtn.classList.toggle('active');
-                if (isSelected) {
-                    if (racikanState.herbs.length < 3) {
-                        racikanState.herbs.push({ value, price });
-                    } else {
-                        optionBtn.classList.remove('active');
-                    }
-                } else {
-                    racikanState.herbs = racikanState.herbs.filter(h => h.value !== value);
-                }
-            } else {
-                parent.querySelectorAll('.racikan-option').forEach(btn => btn.classList.remove('active', 'border-brand-deep-brown', 'bg-brand-beige', 'text-white'));
-                optionBtn.classList.add('active', 'border-brand-deep-brown', 'bg-brand-beige', 'text-white');
-                
-                if (parent.id === 'racikan-temp') racikanState.temp = { value, price };
-                if (parent.id === 'racikan-base') racikanState.base = { value, price };
-                if (parent.id === 'racikan-sugar') racikanState.sugar = { value, price };
-            }
-            
-            parent.querySelectorAll('.racikan-option').forEach(btn => {
-                if (btn.classList.contains('active')) {
-                    btn.classList.add('border-brand-deep-brown', 'bg-brand-beige', 'text-white');
-                } else {
-                     btn.classList.remove('border-brand-deep-brown', 'bg-brand-beige', 'text-white');
-                }
-            });
-
-            updateRacikanPrice();
-        });
-
-        addRacikanToCartBtn.addEventListener('click', handleAddRacikanToCart);
-
-        // Chat listeners
-        konsulBtn.addEventListener('click', openChat);
-        closeChatBtn.addEventListener('click', closeChat);
-        chatSendBtn.addEventListener('click', () => {
-            if (chatInput.value.trim() !== '') {
-                handleChatResponse(chatInput.value.trim());
-                chatInput.value = '';
-            }
-        });
-        chatInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && chatInput.value.trim() !== '') {
-                handleChatResponse(chatInput.value.trim());
-                chatInput.value = '';
-            }
-        });
-        chatOptionsContainer.addEventListener('click', (e) => {
-            const optionBtn = e.target.closest('.chat-option-btn');
-            if (optionBtn) {
-                handleChatResponse(optionBtn.dataset.value);
-            }
-        });
 
         // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
-            lucide.createIcons();
-            renderPopularItems();
-            initRacikan();
-            navigateTo('home-screen');
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', () => navigateTo(item.dataset.screen));
+            });
+            renderApp();
         });
-
     </script>
 </body>
 </html>
