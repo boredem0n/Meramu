@@ -8,288 +8,130 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-        /* Custom colors from the palette */
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
         :root {
-            --brand-deep-brown: #8B4411;
-            --brand-brown: #AE6E4E;
-            --brand-light-brown: #CC9767;
-            --brand-beige: #C7AD7F;
-            --brand-light-beige: #F5F5DD;
-            --brand-muted-brown: #A57A5A;
+            --brand-deep-brown: #8B4411; --brand-brown: #AE6E4E; --brand-light-brown: #CC9767;
+            --brand-beige: #C7AD7F; --brand-light-beige: #F5F5DD; --brand-muted-brown: #A57A5A;
         }
         .bg-brand-deep-brown { background-color: var(--brand-deep-brown); }
         .bg-brand-brown { background-color: var(--brand-brown); }
         .bg-brand-light-brown { background-color: var(--brand-light-brown); }
         .bg-brand-beige { background-color: var(--brand-beige); }
-        .bg-brand-light-beige { background-color: var(--brand-light-beige); }
-        .bg-brand-muted-brown { background-color: var(--brand-muted-brown); }
-
         .text-brand-deep-brown { color: var(--brand-deep-brown); }
-        .text-brand-brown { color: var(--brand-brown); }
-        .text-brand-light-brown { color: var(--brand-light-brown); }
-        .text-brand-beige { color: var(--brand-beige); }
-        .text-brand-light-beige { color: var(--brand-light-beige); }
-        .text-brand-muted-brown { color: var(--brand-muted-brown); }
-        
         .border-brand-deep-brown { border-color: var(--brand-deep-brown); }
-
-        /* Hide scrollbar */
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-        .screen {
-            display: none;
-        }
-        .screen.active {
-            display: block;
-        }
-        .chat-bubble-bot {
-            background-color: #f1f1f1;
-            align-self: flex-start;
-        }
-        .chat-bubble-user {
-            background-color: var(--brand-beige);
-            color: white;
-            align-self: flex-end;
-        }
-        .racikan-step {
-            display: none;
-        }
-        .racikan-step.active {
-            display: block;
-        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .screen { display: none; }
+        .screen.active { display: block; }
+        .chat-bubble-bot { background-color: #f1f1f1; align-self: flex-start; }
+        .chat-bubble-user { background-color: var(--brand-beige); color: white; align-self: flex-end; }
+        .racikan-step { display: none; }
+        .racikan-step.active { display: block; }
     </style>
 </head>
 <body class="bg-brand-light-beige">
 
     <div id="app-container" class="max-w-md mx-auto min-h-screen bg-white shadow-2xl flex flex-col relative">
         
-        <!-- Main Content -->
         <main class="flex-grow pb-20 overflow-y-auto">
-
             <!-- Home Screen (A1) -->
             <div id="home-screen" class="screen active p-6">
                 <header class="flex justify-between items-center mb-6">
-                    <div>
-                        <h1 class="text-2xl font-bold text-brand-deep-brown">Hi, User!</h1>
-                        <p class="text-sm text-brand-muted-brown">Welcome to Meramu</p>
-                    </div>
-                    <div class="bg-brand-beige text-white font-bold py-2 px-4 rounded-full shadow-md">
-                        0 pts
-                    </div>
+                    <div><h1 class="text-2xl font-bold text-brand-deep-brown">Hi, User!</h1></div>
+                    <div class="bg-brand-beige text-white font-bold py-2 px-4 rounded-full shadow-md">0 pts</div>
                 </header>
-
-                <div class="bg-brand-light-brown text-white p-6 rounded-2xl shadow-lg mb-8 relative">
-                    <h2 class="text-xl font-bold mb-2">Monday Discount</h2>
-                    <p>Buy 1 Get 1 for Es Kopi Kayu Manis!</p>
+                <div class="bg-brand-light-brown text-white p-6 rounded-2xl shadow-lg mb-8 h-32 flex items-center justify-center">
+                    <h2 class="text-2xl font-bold">CAMPAIGN</h2>
                 </div>
-
                 <div class="mb-8">
                     <h3 class="text-xl font-bold text-brand-deep-brown mb-4">Category</h3>
-                    <div class="grid grid-cols-4 gap-4 text-center">
-                        <div class="category-btn" data-category="panas">
-                            <div class="bg-brand-beige p-4 rounded-2xl shadow-sm"><i data-lucide="coffee" class="mx-auto text-white"></i></div>
-                            <span class="text-xs mt-2 block text-brand-muted-brown">Panas</span>
-                        </div>
-                        <div class="category-btn" data-category="dingin">
-                            <div class="bg-brand-beige p-4 rounded-2xl shadow-sm"><i data-lucide="snowflake" class="mx-auto text-white"></i></div>
-                            <span class="text-xs mt-2 block text-brand-muted-brown">Dingin</span>
-                        </div>
-                        <div class="category-btn" data-category="kudapan">
-                            <div class="bg-brand-beige p-4 rounded-2xl shadow-sm"><i data-lucide="croissant" class="mx-auto text-white"></i></div>
-                            <span class="text-xs mt-2 block text-brand-muted-brown">Kudapan</span>
-                        </div>
-                        <div class="category-btn" data-category="recipe">
-                             <div class="bg-brand-beige p-4 rounded-2xl shadow-sm"><i data-lucide="book-marked" class="mx-auto text-white"></i></div>
-                            <span class="text-xs mt-2 block text-brand-muted-brown">Recipe</span>
-                        </div>
+                    <div class="grid grid-cols-5 gap-2 text-center">
+                        <div class="category-btn" data-category="panas"><div class="bg-brand-beige p-3 rounded-2xl shadow-sm"><i data-lucide="coffee" class="mx-auto text-white"></i></div><span class="text-xs mt-2 block text-brand-muted-brown">Panas</span></div>
+                        <div class="category-btn" data-category="dingin"><div class="bg-brand-beige p-3 rounded-2xl shadow-sm"><i data-lucide="snowflake" class="mx-auto text-white"></i></div><span class="text-xs mt-2 block text-brand-muted-brown">Dingin</span></div>
+                        <div class="category-btn" data-category="kudapan"><div class="bg-brand-beige p-3 rounded-2xl shadow-sm"><i data-lucide="croissant" class="mx-auto text-white"></i></div><span class="text-xs mt-2 block text-brand-muted-brown">Kudapan</span></div>
+                        <div class="category-btn" data-category="recipe"><div class="bg-brand-beige p-3 rounded-2xl shadow-sm"><i data-lucide="book-marked" class="mx-auto text-white"></i></div><span class="text-xs mt-2 block text-brand-muted-brown">Resep</span></div>
+                        <div id="konsul-btn"><div class="bg-brand-deep-brown p-3 rounded-2xl shadow-sm"><i data-lucide="bot" class="mx-auto text-white"></i></div><span class="text-xs mt-2 block text-brand-muted-brown">Bot</span></div>
                     </div>
                 </div>
-
                 <div class="mt-4">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-xl font-bold text-brand-deep-brown">Popular!</h3>
-                        <button id="konsul-btn" class="bg-brand-deep-brown text-white rounded-full shadow-lg flex items-center justify-center w-14 h-14">
-                            <i data-lucide="bot"></i>
-                        </button>
-                    </div>
-                    <div id="popular-items" class="flex overflow-x-auto gap-4 no-scrollbar pb-2">
-                        <!-- Popular items will be injected here by JS -->
-                    </div>
+                    <h3 class="text-xl font-bold text-brand-deep-brown mb-4">Popular!</h3>
+                    <div id="popular-items" class="grid grid-cols-3 gap-4"></div>
                 </div>
             </div>
 
             <!-- Category Screen (A2) -->
             <div id="category-screen" class="screen">
-                <header class="p-4 flex items-center gap-4 border-b">
-                    <button class="nav-btn" data-target="home-screen"><i data-lucide="arrow-left"></i></button>
-                    <h2 id="category-title" class="text-xl font-bold text-brand-deep-brown">Category</h2>
-                </header>
-                <div id="category-items-grid" class="p-4 grid grid-cols-2 gap-4">
-                    <!-- Category items will be injected here by JS -->
-                </div>
+                <header class="p-4 flex items-center gap-4 border-b"><button class="nav-btn" data-target="home-screen"><i data-lucide="arrow-left"></i></button><h2 id="category-title" class="text-xl font-bold text-brand-deep-brown">Category</h2></header>
+                <div id="category-items-grid" class="p-4 grid grid-cols-2 gap-4"></div>
             </div>
 
             <!-- Product Detail Screen (A3) -->
             <div id="product-detail-screen" class="screen flex flex-col h-full">
-                 <header class="p-4 flex items-center gap-4 border-b sticky top-0 bg-white z-10">
-                    <button id="back-to-category-btn"><i data-lucide="arrow-left"></i></button>
-                    <h2 class="text-xl font-bold text-brand-deep-brown">Details</h2>
-                </header>
-                <div id="product-details-content" class="p-6 flex-grow overflow-y-auto">
-                    <!-- Product details will be injected here by JS -->
-                </div>
+                 <header class="p-4 flex items-center gap-4 border-b sticky top-0 bg-white z-10"><button id="back-to-category-btn"><i data-lucide="arrow-left"></i></button><h2 class="text-xl font-bold text-brand-deep-brown">Details</h2></header>
+                <div id="product-details-content" class="p-6 flex-grow overflow-y-auto"></div>
                 <footer class="p-4 border-t bg-white z-10 flex justify-between items-center">
-                    <div>
-                        <p class="text-sm text-gray-500">Total Price</p>
-                        <p id="product-total-price" class="text-2xl font-bold text-brand-deep-brown">Rp 0</p>
-                    </div>
+                    <div><p class="text-sm text-gray-500">Total Price</p><p id="product-total-price" class="text-2xl font-bold text-brand-deep-brown">Rp 0</p></div>
                     <button id="add-to-cart-btn" class="bg-brand-deep-brown text-white font-bold py-3 px-8 rounded-full shadow-lg">Add to Cart</button>
                 </footer>
             </div>
             
             <!-- Cart Screen (A4/A5) -->
             <div id="cart-screen" class="screen flex flex-col h-full">
-                <header class="p-4 flex items-center gap-4 border-b">
-                    <button class="nav-btn" data-target="home-screen"><i data-lucide="arrow-left"></i></button>
-                    <h2 class="text-xl font-bold text-brand-deep-brown">Your Order</h2>
-                </header>
-                <div id="cart-items-container" class="p-4 flex-grow overflow-y-auto">
-                    <!-- Cart items will be injected here -->
-                </div>
+                <header class="p-4 flex items-center gap-4 border-b"><button class="nav-btn" data-target="home-screen"><i data-lucide="arrow-left"></i></button><h2 class="text-xl font-bold text-brand-deep-brown">Your Order</h2></header>
+                <div id="cart-items-container" class="p-4 flex-grow overflow-y-auto"></div>
                 <div class="p-4 mt-auto border-t">
-                    <div class="flex justify-between items-center mb-4">
-                        <span class="text-lg text-gray-600">Total</span>
-                        <span id="cart-total-price" class="text-2xl font-bold text-brand-deep-brown">Rp 0</span>
-                    </div>
+                    <div class="flex justify-between items-center mb-4"><span class="text-lg text-gray-600">Total</span><span id="cart-total-price" class="text-2xl font-bold text-brand-deep-brown">Rp 0</span></div>
                     <button class="bg-brand-deep-brown text-white w-full py-3 rounded-full font-bold shadow-lg">Pay Now</button>
                 </div>
             </div>
 
             <!-- Racikan Sendiri Screen (B1/B2/B3) -->
             <div id="racikan-screen" class="screen flex flex-col h-full">
-                <header class="p-4 flex items-center gap-4 border-b">
-                    <button id="racikan-back-btn"><i data-lucide="arrow-left"></i></button>
-                    <h2 class="text-xl font-bold text-brand-deep-brown">Jamu Racikan Sendiri</h2>
-                </header>
+                <header class="p-4 flex items-center gap-4 border-b"><button id="racikan-back-btn"><i data-lucide="arrow-left"></i></button><h2 class="text-xl font-bold text-brand-deep-brown">Jamu Racikan Sendiri</h2></header>
                 <div class="p-6 flex-grow overflow-y-auto">
-                    <!-- Racikan steps will be here -->
                     <div id="racikan-step-1" class="racikan-step active space-y-6">
-                        <div>
-                            <label class="font-bold text-brand-muted-brown">Temperature</label>
-                            <div id="racikan-temp" class="flex gap-2 mt-2">
-                                <button data-value="hot" data-price="3000" class="racikan-option flex-1 p-3 border rounded-lg">Hot</button>
-                                <button data-value="iced" data-price="0" class="racikan-option flex-1 p-3 border rounded-lg">Iced</button>
-                            </div>
-                        </div>
-                         <div>
-                            <label class="font-bold text-brand-muted-brown">Base</label>
-                            <div id="racikan-base" class="grid grid-cols-3 gap-2 mt-2">
-                                <button data-value="water" data-price="0" class="racikan-option p-3 border rounded-lg">Water</button>
-                                <button data-value="teh" data-price="2000" class="racikan-option p-3 border rounded-lg">Teh</button>
-                                <button data-value="kopi" data-price="5000" class="racikan-option p-3 border rounded-lg">Kopi</button>
-                            </div>
-                        </div>
+                        <div><label class="font-bold text-brand-muted-brown">Temperature</label><div id="racikan-temp" class="flex gap-2 mt-2"><button data-value="hot" data-price="3000" class="racikan-option flex-1 p-3 border rounded-lg">Hot</button><button data-value="iced" data-price="0" class="racikan-option flex-1 p-3 border rounded-lg">Iced</button></div></div>
+                        <div><label class="font-bold text-brand-muted-brown">Base</label><div id="racikan-base" class="grid grid-cols-3 gap-2 mt-2"><button data-value="water" data-price="0" class="racikan-option p-3 border rounded-lg">Water</button><button data-value="teh" data-price="2000" class="racikan-option p-3 border rounded-lg">Teh</button><button data-value="kopi" data-price="5000" class="racikan-option p-3 border rounded-lg">Kopi</button></div></div>
                     </div>
-
                     <div id="racikan-step-2" class="racikan-step space-y-6">
-                        <div>
-                            <label class="font-bold text-brand-muted-brown">Herbs (Choose up to 3)</label>
-                            <div id="racikan-herbs" class="grid grid-cols-3 gap-2 mt-2">
-                                <!-- Herb options -->
-                            </div>
-                        </div>
+                        <div><label class="font-bold text-brand-muted-brown">Herbs (Choose up to 3)</label><div id="racikan-herbs" class="grid grid-cols-3 gap-2 mt-2"></div></div>
                     </div>
-
                     <div id="racikan-step-3" class="racikan-step space-y-6">
-                         <div>
-                            <label class="font-bold text-brand-muted-brown">Sugar</label>
-                            <div id="racikan-sugar" class="grid grid-cols-2 gap-2 mt-2">
-                               <button data-value="no_sugar" data-price="0" class="racikan-option p-3 border rounded-lg">No Sugar</button>
-                               <button data-value="white_sugar" data-price="0" class="racikan-option p-3 border rounded-lg">White Sugar</button>
-                               <button data-value="palm_sugar" data-price="0" class="racikan-option p-3 border rounded-lg">Palm Sugar</button>
-                               <button data-value="diabetic_sugar" data-price="5000" class="racikan-option p-3 border rounded-lg">Diabetic Sugar</button>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="font-bold text-brand-muted-brown">Name your Jamu (Optional)</label>
-                            <input type="text" id="racikan-name" placeholder="My Awesome Jamu" class="w-full p-3 border rounded-lg mt-2">
-                        </div>
+                        <div><label class="font-bold text-brand-muted-brown">Sugar</label><div id="racikan-sugar" class="grid grid-cols-2 gap-2 mt-2"><button data-value="no_sugar" data-price="0" class="racikan-option p-3 border rounded-lg">No Sugar</button><button data-value="white_sugar" data-price="0" class="racikan-option p-3 border rounded-lg">White Sugar</button><button data-value="palm_sugar" data-price="0" class="racikan-option p-3 border rounded-lg">Palm Sugar</button><button data-value="diabetic_sugar" data-price="5000" class="racikan-option p-3 border rounded-lg">Diabetic Sugar</button></div></div>
+                        <div><label class="font-bold text-brand-muted-brown">Name your Jamu (Optional)</label><input type="text" id="racikan-name" placeholder="My Awesome Jamu" class="w-full p-3 border rounded-lg mt-2"></div>
                     </div>
                 </div>
                 <footer class="p-4 border-t bg-white z-10 flex justify-between items-center">
-                    <div>
-                        <p class="text-sm text-gray-500">Total Price</p>
-                        <p id="racikan-total-price" class="text-2xl font-bold text-brand-deep-brown">Rp 0</p>
-                    </div>
+                    <div><p class="text-sm text-gray-500">Total Price</p><p id="racikan-total-price" class="text-2xl font-bold text-brand-deep-brown">Rp 0</p></div>
                     <button id="racikan-next-btn" class="bg-brand-deep-brown text-white font-bold py-3 px-8 rounded-full shadow-lg">Next</button>
                 </footer>
             </div>
-            
         </main>
 
         <!-- Bottom Navigation Bar -->
         <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white border-t-2 border-brand-light-beige shadow-[0_-10px_30px_-15px_rgba(0,0,0,0.1)] rounded-t-2xl z-20">
             <div class="flex justify-around items-center h-16">
-                <button class="nav-btn text-brand-deep-brown" data-target="home-screen">
-                    <i data-lucide="home"></i>
-                    <span class="text-xs">Home</span>
-                </button>
-                <button class="nav-btn text-brand-muted-brown" data-target="voucher-screen">
-                    <i data-lucide="ticket"></i>
-                    <span class="text-xs">Voucher</span>
-                </button>
-                <button class="nav-btn -mt-8" data-target="racikan-screen">
-                    <div class="bg-brand-deep-brown text-white rounded-full p-4 shadow-xl border-4 border-white">
-                        <i data-lucide="flask-conical"></i>
-                    </div>
-                </button>
-                <button class="nav-btn text-brand-muted-brown" data-target="cart-screen">
-                     <div class="relative">
-                        <i data-lucide="shopping-cart"></i>
-                        <span id="cart-badge" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center hidden">0</span>
-                    </div>
-                    <span class="text-xs">Order</span>
-                </button>
-                <button class="nav-btn text-brand-muted-brown" data-target="account-screen">
-                    <i data-lucide="user"></i>
-                    <span class="text-xs">Account</span>
-                </button>
+                <button class="nav-btn text-brand-deep-brown" data-target="home-screen"><i data-lucide="home"></i><span class="text-xs">Home</span></button>
+                <button class="nav-btn text-brand-muted-brown" data-target="voucher-screen"><i data-lucide="ticket"></i><span class="text-xs">Voucher</span></button>
+                <button class="nav-btn -mt-8" data-target="racikan-screen"><div class="bg-brand-deep-brown text-white rounded-full p-4 shadow-xl border-4 border-white"><i data-lucide="flask-conical"></i></div></button>
+                <button class="nav-btn text-brand-muted-brown" data-target="cart-screen"><div class="relative"><i data-lucide="shopping-cart"></i><span id="cart-badge" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center hidden">0</span></div><span class="text-xs">Order</span></button>
+                <button class="nav-btn text-brand-muted-brown" data-target="account-screen"><i data-lucide="user"></i><span class="text-xs">Account</span></button>
             </div>
         </nav>
 
         <!-- Konsul Si Mbok Chat Modal -->
         <div id="chat-modal" class="absolute inset-0 bg-white z-30 flex-col h-full" style="display: none;">
-            <header class="p-4 flex items-center gap-4 border-b">
-                <button id="close-chat-btn"><i data-lucide="x"></i></button>
-                <h2 class="text-xl font-bold text-brand-deep-brown">Konsul Si Mbok</h2>
-            </header>
-            <div id="chat-messages" class="flex-grow p-4 space-y-2 overflow-y-auto flex flex-col">
-                <!-- Chat messages will be injected here -->
-            </div>
+            <header class="p-4 flex items-center gap-4 border-b"><button id="close-chat-btn"><i data-lucide="x"></i></button><h2 class="text-xl font-bold text-brand-deep-brown">Konsul Si Mbok</h2></header>
+            <div id="chat-messages" class="flex-grow p-4 space-y-2 overflow-y-auto flex flex-col"></div>
             <footer class="p-4 border-t bg-white">
-                <div id="chat-input-container" class="flex items-center gap-2">
-                    <input type="text" id="chat-input" placeholder="Tell me how you feel..." class="w-full p-2 border rounded-full">
-                    <button id="chat-send-btn" class="bg-brand-deep-brown text-white p-2 rounded-full"><i data-lucide="send"></i></button>
-                </div>
-                 <div id="chat-options-container" class="hidden flex-col gap-2">
-                    <!-- Yes/No buttons will appear here -->
-                </div>
+                <div id="chat-input-container" class="flex items-center gap-2"><input type="text" id="chat-input" placeholder="Tell me how you feel..." class="w-full p-2 border rounded-full"><button id="chat-send-btn" class="bg-brand-deep-brown text-white p-2 rounded-full"><i data-lucide="send"></i></button></div>
+                <div id="chat-options-container" class="hidden flex-col gap-2"></div>
             </footer>
         </div>
 
     </div>
 
     <script>
-        // --- DATABASE ---
         const db = {
             products: [
                 { id: 1, name: 'Jahe Wangi', category: 'panas', price: 10000, popular: true, img: 'https://placehold.co/300x300/AE6E4E/F5F5DD?text=Jahe+Wangi' },
@@ -308,160 +150,85 @@
             ]
         };
 
-        // --- STATE ---
-        let cart = [];
-        let currentProduct = null;
-        let currentCategory = null;
-        let racikanState = {};
-        let chatState = 'START';
-        let racikanCurrentStep = 1;
+        let cart = [], currentProduct = null, currentCategory = null, racikanState = {}, chatState = 'START', racikanCurrentStep = 1;
+        const $ = (selector) => document.querySelector(selector);
+        const $$ = (selector) => document.querySelectorAll(selector);
 
-        // --- DOM ELEMENTS ---
-        const screens = document.querySelectorAll('.screen');
-        const navButtons = document.querySelectorAll('.nav-btn');
-        const categoryButtons = document.querySelectorAll('.category-btn');
-        const popularItemsContainer = document.getElementById('popular-items');
-        const categoryItemsGrid = document.getElementById('category-items-grid');
-        const categoryTitle = document.getElementById('category-title');
-        const productDetailScreen = document.getElementById('product-detail-screen');
-        const productDetailsContent = document.getElementById('product-details-content');
-        const backToCategoryBtn = document.getElementById('back-to-category-btn');
-        const addToCartBtn = document.getElementById('add-to-cart-btn');
-        const cartItemsContainer = document.getElementById('cart-items-container');
-        const cartTotalPriceEl = document.getElementById('cart-total-price');
-        const cartBadge = document.getElementById('cart-badge');
-        
-        // Racikan elements
-        const racikanScreen = document.getElementById('racikan-screen');
-        const racikanSteps = racikanScreen.querySelectorAll('.racikan-step');
-        const racikanHerbsContainer = document.getElementById('racikan-herbs');
-        const racikanTotalPriceEl = document.getElementById('racikan-total-price');
-        const racikanNextBtn = document.getElementById('racikan-next-btn');
-        const racikanBackBtn = document.getElementById('racikan-back-btn');
+        const formatCurrency = (amount) => `Rp ${amount.toLocaleString('id-ID')}`;
 
-        // Chat elements
-        const konsulBtn = document.getElementById('konsul-btn');
-        const chatModal = document.getElementById('chat-modal');
-        const closeChatBtn = document.getElementById('close-chat-btn');
-        const chatMessages = document.getElementById('chat-messages');
-        const chatInputContainer = document.getElementById('chat-input-container');
-        const chatInput = document.getElementById('chat-input');
-        const chatSendBtn = document.getElementById('chat-send-btn');
-        const chatOptionsContainer = document.getElementById('chat-options-container');
-
-        // --- FUNCTIONS ---
-
-        function formatCurrency(amount) {
-            return `Rp ${amount.toLocaleString('id-ID')}`;
-        }
-
-        function navigateTo(screenId) {
-            screens.forEach(screen => {
-                screen.classList.toggle('active', screen.id === screenId);
+        const navigateTo = (screenId) => {
+            $$('.screen').forEach(s => s.classList.toggle('active', s.id === screenId));
+            if (screenId === 'racikan-screen') resetRacikan();
+            $$('.nav-btn').forEach(btn => {
+                const target = btn.dataset.target;
+                const method = target === screenId ? 'add' : 'remove';
+                btn.classList[method]('text-brand-deep-brown');
+                btn.classList[target !== screenId ? 'add' : 'remove']('text-brand-muted-brown');
             });
-            if (screenId === 'racikan-screen') {
-                resetRacikan();
-            }
-            navButtons.forEach(btn => {
-                 const target = btn.dataset.target;
-                 if (target === screenId) {
-                     btn.classList.remove('text-brand-muted-brown');
-                     btn.classList.add('text-brand-deep-brown');
-                 } else {
-                     btn.classList.remove('text-brand-deep-brown');
-                     btn.classList.add('text-brand-muted-brown');
-                 }
-            });
-        }
-        
-        function renderPopularItems() {
-            const popularProducts = db.products.filter(p => p.popular);
-            popularItemsContainer.innerHTML = popularProducts.map(product => `
-                <div class="product-card flex-shrink-0 w-40" data-product-id="${product.id}">
-                    <img src="${product.img}" alt="${product.name}" class="w-full h-28 object-cover rounded-2xl mb-2">
-                    <h4 class="font-semibold text-brand-deep-brown truncate">${product.name}</h4>
-                    <p class="text-sm text-brand-muted-brown">${formatCurrency(product.price)}</p>
-                </div>
-            `).join('');
-        }
+        };
 
-        function renderCategoryItems(category) {
+        const renderProducts = (products, container, template) => {
+            container.innerHTML = products.map(template).join('');
+        };
+
+        const popularTemplate = product => `
+            <div class="product-card text-center" data-product-id="${product.id}">
+                <img src="${product.img}" alt="${product.name}" class="w-full h-24 object-cover rounded-2xl mb-2">
+                <h4 class="font-semibold text-sm text-brand-deep-brown truncate">${product.name}</h4>
+                <p class="text-xs text-brand-muted-brown">${formatCurrency(product.price)}</p>
+            </div>`;
+
+        const categoryTemplate = product => `
+            <div class="product-card" data-product-id="${product.id}">
+                <img src="${product.img}" alt="${product.name}" class="w-full h-32 object-cover rounded-2xl mb-2">
+                <h4 class="font-semibold text-brand-deep-brown truncate">${product.name}</h4>
+                <p class="text-sm text-brand-muted-brown">${formatCurrency(product.price)}</p>
+            </div>`;
+
+        const renderCategoryItems = (category) => {
             currentCategory = category;
             const categoryProducts = db.products.filter(p => p.category === category);
-            categoryTitle.textContent = category.charAt(0).toUpperCase() + category.slice(1);
-            categoryItemsGrid.innerHTML = categoryProducts.map(product => `
-                <div class="product-card" data-product-id="${product.id}">
-                    <img src="${product.img}" alt="${product.name}" class="w-full h-32 object-cover rounded-2xl mb-2">
-                    <h4 class="font-semibold text-brand-deep-brown truncate">${product.name}</h4>
-                    <p class="text-sm text-brand-muted-brown">${formatCurrency(product.price)}</p>
-                </div>
-            `).join('');
+            $('#category-title').textContent = category.charAt(0).toUpperCase() + category.slice(1);
+            renderProducts(categoryProducts, $('#category-items-grid'), categoryTemplate);
             navigateTo('category-screen');
-        }
+        };
 
-        function renderProductDetails(productId) {
+        const updateProductPrice = () => {
+            if (!currentProduct) return;
+            let total = currentProduct.price + Object.values(currentProduct.options).reduce((sum, opt) => sum + opt.price, 0);
+            $('#product-total-price').textContent = formatCurrency(total);
+        };
+
+        const renderProductDetails = (productId) => {
             const product = db.products.find(p => p.id === parseInt(productId));
             if (!product) return;
             currentProduct = { ...product, options: {}, quantity: 1 };
+            
+            let optionsHtml = (product.category === 'panas' || product.category === 'dingin') ? `
+                <div class="space-y-4">
+                    ${product.category === 'dingin' ? `<div><h4 class="font-bold text-brand-muted-brown mb-2">Size</h4><div class="flex gap-2" data-option-key="size"><button class="option-btn active" data-value="regular" data-price="0">Regular</button><button class="option-btn" data-value="extra" data-price="5000">Extra (+${formatCurrency(5000)})</button></div></div>` : ''}
+                    <div><h4 class="font-bold text-brand-muted-brown mb-2">Sugar</h4><div class="flex gap-2" data-option-key="sugar"><button class="option-btn active" data-value="normal" data-price="0">Normal</button><button class="option-btn" data-value="diabetic" data-price="5000">Diabetic (+${formatCurrency(5000)})</button></div></div>
+                    <div><h4 class="font-bold text-brand-muted-brown mb-2">Sugar Level</h4><div class="flex gap-2" data-option-key="sugar_level"><button class="option-btn active" data-value="normal" data-price="0">Normal</button><button class="option-btn" data-value="less" data-price="0">Less</button><button class="option-btn" data-value="no_sugar" data-price="0">No Sugar</button></div></div>
+                </div>` : '';
 
-            let optionsHtml = '';
-            if (product.category === 'panas' || product.category === 'dingin') {
-                optionsHtml = `
-                    <div class="space-y-4">
-                        ${product.category === 'dingin' ? `
-                        <div>
-                            <h4 class="font-bold text-brand-muted-brown mb-2">Size</h4>
-                            <div class="flex gap-2" data-option-key="size">
-                                <button class="option-btn active" data-value="regular" data-price="0">Regular</button>
-                                <button class="option-btn" data-value="extra" data-price="5000">Extra (+${formatCurrency(5000)})</button>
-                            </div>
-                        </div>` : ''}
-                        <div>
-                            <h4 class="font-bold text-brand-muted-brown mb-2">Sugar</h4>
-                            <div class="flex gap-2" data-option-key="sugar">
-                                <button class="option-btn active" data-value="normal" data-price="0">Normal</button>
-                                <button class="option-btn" data-value="diabetic" data-price="5000">Diabetic (+${formatCurrency(5000)})</button>
-                            </div>
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-brand-muted-brown mb-2">Sugar Level</h4>
-                            <div class="flex gap-2" data-option-key="sugar_level">
-                                <button class="option-btn active" data-value="normal" data-price="0">Normal</button>
-                                <button class="option-btn" data-value="less" data-price="0">Less</button>
-                                <button class="option-btn" data-value="no_sugar" data-price="0">No Sugar</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-
-            productDetailsContent.innerHTML = `
+            $('#product-details-content').innerHTML = `
                 <img src="${product.img}" alt="${product.name}" class="w-full h-60 object-cover rounded-3xl mb-4">
                 <div class="px-1">
                     <h2 class="text-3xl font-bold text-brand-deep-brown mb-2">${product.name}</h2>
                     <p class="text-xl text-brand-muted-brown mb-4">${formatCurrency(product.price)}</p>
                     ${product.description ? `<p class="text-brand-muted-brown mb-6">${product.description}</p>` : ''}
                     ${optionsHtml}
-                </div>
-            `;
+                </div>`;
             updateProductPrice();
             navigateTo('product-detail-screen');
-        }
+        };
 
-        function updateProductPrice() {
-            if (!currentProduct) return;
-            let total = currentProduct.price;
-            for (const key in currentProduct.options) {
-                total += currentProduct.options[key].price;
-            }
-            document.getElementById('product-total-price').textContent = formatCurrency(total);
-        }
-
-        function updateCart() {
+        const updateCart = () => {
+            const container = $('#cart-items-container');
             if (cart.length === 0) {
-                cartItemsContainer.innerHTML = `<p class="text-center text-gray-500">Your cart is empty.</p>`;
+                container.innerHTML = `<p class="text-center text-gray-500">Your cart is empty.</p>`;
             } else {
-                cartItemsContainer.innerHTML = cart.map((item, index) => `
+                container.innerHTML = cart.map((item, index) => `
                     <div class="flex items-center gap-4 mb-4 p-2 rounded-lg border">
                         <img src="${item.img}" class="w-16 h-16 object-cover rounded-md">
                         <div class="flex-grow">
@@ -473,333 +240,188 @@
                             <span>${item.quantity}</span>
                             <button class="quantity-btn p-1" data-index="${index}" data-change="1"><i data-lucide="plus" class="w-4 h-4"></i></button>
                         </div>
-                    </div>
-                `).join('');
+                    </div>`).join('');
             }
-            lucide.createIcons();
-            
             const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            cartTotalPriceEl.textContent = formatCurrency(total);
-
+            $('#cart-total-price').textContent = formatCurrency(total);
             const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-            cartBadge.textContent = totalItems;
-            cartBadge.classList.toggle('hidden', totalItems === 0);
-        }
+            $('#cart-badge').textContent = totalItems;
+            $('#cart-badge').classList.toggle('hidden', totalItems === 0);
+            lucide.createIcons();
+        };
         
-        function handleAddToCart() {
-            let finalPrice = currentProduct.price;
-            let optionsSummary = [];
-            for (const key in currentProduct.options) {
-                finalPrice += currentProduct.options[key].price;
-                optionsSummary.push(currentProduct.options[key].value);
-            }
-            
-            const cartItem = {
-                id: currentProduct.id,
-                name: currentProduct.name,
-                img: currentProduct.img,
-                price: finalPrice,
-                quantity: 1,
-                options: optionsSummary.join(', ')
-            };
-            
-            const existingItemIndex = cart.findIndex(item => item.id === cartItem.id && item.options === cartItem.options);
-            
-            if (existingItemIndex > -1) {
-                cart[existingItemIndex].quantity++;
-            } else {
-                cart.push(cartItem);
-            }
-            
-            updateCart();
-            navigateTo('cart-screen');
-        }
-        
-        function resetRacikan() {
+        const resetRacikan = () => {
             racikanCurrentStep = 1;
-            racikanState = {
-                temp: null, base: null, herbs: [], sugar: null, name: ''
-            };
-            racikanScreen.querySelectorAll('.racikan-option.active').forEach(el => el.classList.remove('active', 'border-brand-deep-brown', 'bg-brand-beige', 'text-white'));
-            document.getElementById('racikan-name').value = '';
+            racikanState = { temp: null, base: null, herbs: [], sugar: null, name: '' };
+            $$('#racikan-screen .racikan-option.active').forEach(el => el.classList.remove('active', 'border-brand-deep-brown', 'bg-brand-beige', 'text-white'));
+            $('#racikan-name').value = '';
             updateRacikanStep();
             updateRacikanPrice();
-        }
+        };
 
-        function initRacikan() {
-            racikanHerbsContainer.innerHTML = db.herbs.map(herb => `
-                <button data-value="${herb.name}" data-price="${herb.price}" class="racikan-option p-2 border rounded-lg text-sm">${herb.name}</button>
-            `).join('');
-            resetRacikan();
-        }
+        const updateRacikanPrice = () => {
+            let total = (racikanState.temp?.price || 0) + (racikanState.base?.price || 0) + (racikanState.sugar?.price || 0) + racikanState.herbs.reduce((sum, h) => sum + h.price, 0);
+            $('#racikan-total-price').textContent = formatCurrency(total);
+        };
 
-        function updateRacikanPrice() {
-            let total = 0;
-            if (racikanState.temp) total += racikanState.temp.price;
-            if (racikanState.base) total += racikanState.base.price;
-            if (racikanState.sugar) total += racikanState.sugar.price;
-            racikanState.herbs.forEach(herb => total += herb.price);
-            racikanTotalPriceEl.textContent = formatCurrency(total);
-        }
+        const updateRacikanStep = () => {
+            $$('.racikan-step').forEach(step => step.classList.toggle('active', parseInt(step.id.split('-')[2]) === racikanCurrentStep));
+            $('#racikan-next-btn').textContent = racikanCurrentStep === 3 ? 'Add to Cart' : 'Next';
+        };
 
-        function updateRacikanStep() {
-            racikanSteps.forEach(step => {
-                step.classList.toggle('active', parseInt(step.id.split('-')[2]) === racikanCurrentStep);
-            });
-            if (racikanCurrentStep === 3) {
-                racikanNextBtn.textContent = 'Add to Cart';
-            } else {
-                racikanNextBtn.textContent = 'Next';
-            }
-        }
-
-        function handleRacikanNext() {
+        const handleRacikanNext = () => {
             if (racikanCurrentStep < 3) {
                 racikanCurrentStep++;
                 updateRacikanStep();
             } else {
-                // Add to cart logic
-                let finalPrice = 0;
-                let nameParts = [];
-
-                if(racikanState.temp) finalPrice += racikanState.temp.price;
-                if(racikanState.base) finalPrice += racikanState.base.price;
-                racikanState.herbs.forEach(herb => { finalPrice += herb.price; });
-                if(racikanState.sugar) finalPrice += racikanState.sugar.price;
-
-                const optionsDesc = [
-                    racikanState.temp?.value,
-                    racikanState.base?.value,
-                    ...racikanState.herbs.map(h => h.value),
-                    racikanState.sugar?.value
-                ].filter(Boolean).join(', ');
-                
-                const jamuName = document.getElementById('racikan-name').value.trim() || "Jamu Racikan Sendiri";
-
-                const cartItem = {
-                    id: `racikan_${Date.now()}`,
-                    name: jamuName,
-                    img: 'https://placehold.co/300x300/8B4411/F5F5DD?text=Racikan',
-                    price: finalPrice,
-                    quantity: 1,
-                    options: optionsDesc
-                };
-                cart.push(cartItem);
+                const finalPrice = (racikanState.temp?.price || 0) + (racikanState.base?.price || 0) + (racikanState.sugar?.price || 0) + racikanState.herbs.reduce((sum, h) => sum + h.price, 0);
+                const optionsDesc = [racikanState.temp?.value, racikanState.base?.value, ...racikanState.herbs.map(h => h.value), racikanState.sugar?.value].filter(Boolean).join(', ');
+                const jamuName = $('#racikan-name').value.trim() || "Jamu Racikan Sendiri";
+                cart.push({ id: `racikan_${Date.now()}`, name: jamuName, img: 'https://placehold.co/300x300/8B4411/F5F5DD?text=Racikan', price: finalPrice, quantity: 1, options: optionsDesc });
                 updateCart();
                 navigateTo('cart-screen');
             }
-        }
-        
-        function handleRacikanBack() {
-            if (racikanCurrentStep > 1) {
-                racikanCurrentStep--;
-                updateRacikanStep();
-            } else {
-                navigateTo('home-screen');
+        };
+
+        const chatLogic = {
+            'AWAITING_FEELING': (response) => {
+                addChatMessage(response, 'user');
+                setTimeout(() => {
+                    addChatMessage('Diagnosing...', 'bot');
+                    setTimeout(() => {
+                        addChatMessage("Here's your health diagnosis... a recipe of Kunyit and Jahe would be good for you.", 'bot');
+                        addChatMessage('Do you wish to save the recipe?', 'bot');
+                        chatState = 'AWAITING_SAVE_RECIPE';
+                        showChatOptions([{text: 'Yes', value: 'yes'}, {text: 'No', value: 'no'}]);
+                    }, 1500);
+                }, 1000);
+            },
+            'AWAITING_SAVE_RECIPE': (response) => {
+                addChatMessage(response === 'yes' ? 'Yes' : 'No', 'user');
+                hideChatOptions();
+                if (response === 'yes') {
+                    addChatMessage(`Saved! Here's your recipe number: #${Math.floor(1000 + Math.random() * 9000)}`, 'bot');
+                }
+                setTimeout(() => {
+                    addChatMessage('End Chat?', 'bot');
+                    chatState = 'AWAITING_END_CHAT';
+                    showChatOptions([{text: 'Yes', value: 'yes'}, {text: 'No', value: 'no'}]);
+                }, 1000);
+            },
+            'AWAITING_END_CHAT': (response) => {
+                addChatMessage(response === 'yes' ? 'Yes' : 'No', 'user');
+                hideChatOptions();
+                if (response === 'yes') $('#close-chat-btn').click(); else startChat();
             }
-        }
+        };
 
-
-        // --- CHATBOT FUNCTIONS ---
-        function openChat() {
-            chatModal.style.display = 'flex';
-            startChat();
-        }
-
-        function closeChat() {
-            chatModal.style.display = 'none';
-        }
-
-        function addChatMessage(message, sender) {
+        const addChatMessage = (message, sender) => {
             const bubble = document.createElement('div');
             bubble.textContent = message;
             bubble.className = `p-3 rounded-2xl max-w-xs break-words chat-bubble-${sender}`;
-            chatMessages.appendChild(bubble);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        function showChatOptions(options) {
-            chatInputContainer.classList.add('hidden');
-            chatOptionsContainer.classList.remove('hidden');
-            chatOptionsContainer.innerHTML = options.map(opt => 
-                `<button class="chat-option-btn w-full p-2 rounded-lg bg-brand-beige text-white" data-value="${opt.value}">${opt.text}</button>`
-            ).join('');
-        }
-
-        function hideChatOptions() {
-            chatInputContainer.classList.remove('hidden');
-            chatOptionsContainer.classList.add('hidden');
-        }
-
-        function startChat() {
+            $('#chat-messages').appendChild(bubble);
+            $('#chat-messages').scrollTop = $('#chat-messages').scrollHeight;
+        };
+        const showChatOptions = (options) => {
+            $('#chat-input-container').classList.add('hidden');
+            const optsContainer = $('#chat-options-container');
+            optsContainer.classList.remove('hidden');
+            optsContainer.innerHTML = options.map(opt => `<button class="chat-option-btn w-full p-2 rounded-lg bg-brand-beige text-white" data-value="${opt.value}">${opt.text}</button>`).join('');
+        };
+        const hideChatOptions = () => {
+            $('#chat-input-container').classList.remove('hidden');
+            $('#chat-options-container').classList.add('hidden');
+        };
+        const startChat = () => {
             chatState = 'AWAITING_FEELING';
-            chatMessages.innerHTML = '';
+            $('#chat-messages').innerHTML = '';
             hideChatOptions();
             addChatMessage('Sugeng Rawuh, Si Mbok is here. How do you feel?', 'bot');
-        }
+        };
 
-        function handleChatResponse(response) {
-            switch(chatState) {
-                case 'AWAITING_FEELING':
-                    addChatMessage(response, 'user');
-                    chatState = 'DIAGNOSING';
-                    setTimeout(() => {
-                        addChatMessage('Diagnosing...', 'bot');
-                        setTimeout(() => {
-                            addChatMessage("Here's your health diagnosis... a recipe of Kunyit and Jahe would be good for you.", 'bot');
-                            addChatMessage('Do you wish to save the recipe?', 'bot');
-                            chatState = 'AWAITING_SAVE_RECIPE';
-                            showChatOptions([ {text: 'Yes', value: 'yes'}, {text: 'No', value: 'no'} ]);
-                        }, 1500);
-                    }, 1000);
-                    break;
-                case 'AWAITING_SAVE_RECIPE':
-                    addChatMessage(response === 'yes' ? 'Yes' : 'No', 'user');
-                    hideChatOptions();
-                    if (response === 'yes') {
-                        const recipeNumber = `#${Math.floor(1000 + Math.random() * 9000)}`;
-                        addChatMessage(`Saved! Here's your recipe number: ${recipeNumber}`, 'bot');
-                    }
-                    setTimeout(() => {
-                        addChatMessage('End Chat?', 'bot');
-                        chatState = 'AWAITING_END_CHAT';
-                        showChatOptions([ {text: 'Yes', value: 'yes'}, {text: 'No', value: 'no'} ]);
-                    }, 1000);
-                    break;
-                case 'AWAITING_END_CHAT':
-                     addChatMessage(response === 'yes' ? 'Yes' : 'No', 'user');
-                     hideChatOptions();
-                     if (response === 'yes') {
-                         closeChat();
-                     } else {
-                         startChat();
-                     }
-                    break;
-            }
-        }
-
-
-        // --- EVENT LISTENERS ---
-        navButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const targetScreen = button.dataset.target;
-                if (targetScreen) {
-                    navigateTo(targetScreen);
-                }
-            });
-        });
-
-        categoryButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                renderCategoryItems(button.dataset.category);
-            });
-        });
-
-        document.body.addEventListener('click', (e) => {
-            const productCard = e.target.closest('.product-card');
-            if (productCard) {
-                renderProductDetails(productCard.dataset.productId);
-            }
-
-            const optionBtn = e.target.closest('.option-btn');
-            if (optionBtn) {
-                const parent = optionBtn.parentElement;
-                const key = parent.dataset.optionKey;
-                parent.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('active'));
-                optionBtn.classList.add('active');
-                currentProduct.options[key] = {
-                    value: optionBtn.dataset.value,
-                    price: parseInt(optionBtn.dataset.price)
-                };
-                updateProductPrice();
-            }
-
-            const quantityBtn = e.target.closest('.quantity-btn');
-            if (quantityBtn) {
-                const index = parseInt(quantityBtn.dataset.index);
-                const change = parseInt(quantityBtn.dataset.change);
-                cart[index].quantity += change;
-                if (cart[index].quantity <= 0) {
-                    cart.splice(index, 1);
-                }
-                updateCart();
-            }
-        });
-        
-        backToCategoryBtn.addEventListener('click', () => {
-            if(currentCategory) {
-                navigateTo('category-screen');
-            } else {
-                navigateTo('home-screen');
-            }
-        });
-
-        addToCartBtn.addEventListener('click', handleAddToCart);
-        
-        racikanScreen.addEventListener('click', e => {
-            const optionBtn = e.target.closest('.racikan-option');
-            if (!optionBtn) return;
-
-            const parent = optionBtn.parentElement;
-            const value = optionBtn.dataset.value;
-            const price = parseInt(optionBtn.dataset.price);
-
-            if (parent.id === 'racikan-herbs') {
-                const isSelected = optionBtn.classList.toggle('active');
-                if (isSelected) {
-                    if (racikanState.herbs.length < 3) {
-                        racikanState.herbs.push({ value, price });
-                    } else {
-                        optionBtn.classList.remove('active');
-                    }
-                } else {
-                    racikanState.herbs = racikanState.herbs.filter(h => h.value !== value);
-                }
-            } else {
-                parent.querySelectorAll('.racikan-option').forEach(btn => btn.classList.remove('active', 'border-brand-deep-brown', 'bg-brand-beige', 'text-white'));
-                
-                if (parent.id === 'racikan-temp') racikanState.temp = { value, price };
-                if (parent.id === 'racikan-base') racikanState.base = { value, price };
-                if (parent.id === 'racikan-sugar') racikanState.sugar = { value, price };
-            }
-            
-            optionBtn.classList.add('active', 'border-brand-deep-brown', 'bg-brand-beige', 'text-white');
-            updateRacikanPrice();
-        });
-
-        racikanNextBtn.addEventListener('click', handleRacikanNext);
-        racikanBackBtn.addEventListener('click', handleRacikanBack);
-
-        // Chat listeners
-        konsulBtn.addEventListener('click', openChat);
-        closeChatBtn.addEventListener('click', closeChat);
-        chatSendBtn.addEventListener('click', () => {
-            if (chatInput.value.trim() !== '') {
-                handleChatResponse(chatInput.value.trim());
-                chatInput.value = '';
-            }
-        });
-        chatInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && chatInput.value.trim() !== '') {
-                handleChatResponse(chatInput.value.trim());
-                chatInput.value = '';
-            }
-        });
-        chatOptionsContainer.addEventListener('click', (e) => {
-            const optionBtn = e.target.closest('.chat-option-btn');
-            if (optionBtn) {
-                handleChatResponse(optionBtn.dataset.value);
-            }
-        });
-
-        // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
+            renderProducts(db.products.filter(p => p.popular), $('#popular-items'), popularTemplate);
+            $('#racikan-herbs').innerHTML = db.herbs.map(herb => `<button data-value="${herb.name}" data-price="${herb.price}" class="racikan-option p-2 border rounded-lg text-sm">${herb.name}</button>`).join('');
+            resetRacikan();
             lucide.createIcons();
-            renderPopularItems();
-            initRacikan();
-            navigateTo('home-screen');
-        });
 
+            document.body.addEventListener('click', e => {
+                const target = e.target;
+                const productCard = target.closest('.product-card');
+                const categoryBtn = target.closest('.category-btn');
+                const navBtn = target.closest('.nav-btn');
+                const optionBtn = target.closest('.option-btn');
+                const quantityBtn = target.closest('.quantity-btn');
+                const racikanOption = target.closest('.racikan-option');
+
+                if (productCard) renderProductDetails(productCard.dataset.productId);
+                if (categoryBtn) renderCategoryItems(categoryBtn.dataset.category);
+                if (navBtn) navigateTo(navBtn.dataset.target);
+                if (target.closest('#konsul-btn')) { $('#chat-modal').style.display = 'flex'; startChat(); }
+                if (target.closest('#close-chat-btn')) $('#chat-modal').style.display = 'none';
+                if (target.closest('#back-to-category-btn')) navigateTo(currentCategory ? 'category-screen' : 'home-screen');
+                if (target.closest('#add-to-cart-btn')) {
+                    let finalPrice = currentProduct.price + Object.values(currentProduct.options).reduce((sum, opt) => sum + opt.price, 0);
+                    let optionsSummary = Object.values(currentProduct.options).map(o => o.value).join(', ');
+                    const existing = cart.find(item => item.id === currentProduct.id && item.options === optionsSummary);
+                    if (existing) existing.quantity++;
+                    else cart.push({ ...currentProduct, price: finalPrice, quantity: 1, options: optionsSummary });
+                    updateCart(); navigateTo('cart-screen');
+                }
+                if (quantityBtn) {
+                    const index = parseInt(quantityBtn.dataset.index);
+                    cart[index].quantity += parseInt(quantityBtn.dataset.change);
+                    if (cart[index].quantity <= 0) cart.splice(index, 1);
+                    updateCart();
+                }
+                if (optionBtn) {
+                    const parent = optionBtn.parentElement;
+                    parent.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('active'));
+                    optionBtn.classList.add('active');
+                    currentProduct.options[parent.dataset.optionKey] = { value: optionBtn.dataset.value, price: parseInt(optionBtn.dataset.price) };
+                    updateProductPrice();
+                }
+                if (racikanOption) {
+                    const parent = racikanOption.parentElement;
+                    const value = racikanOption.dataset.value;
+                    const price = parseInt(racikanOption.dataset.price);
+                    if (parent.id === 'racikan-herbs') {
+                        const isSelected = racikanOption.classList.toggle('active');
+                        if (isSelected && racikanState.herbs.length < 3) racikanState.herbs.push({ value, price });
+                        else if (isSelected) racikanOption.classList.remove('active');
+                        else racikanState.herbs = racikanState.herbs.filter(h => h.value !== value);
+                    } else {
+                        parent.querySelectorAll('.racikan-option').forEach(btn => btn.classList.remove('active', 'border-brand-deep-brown', 'bg-brand-beige', 'text-white'));
+                        if (parent.id === 'racikan-temp') racikanState.temp = { value, price };
+                        if (parent.id === 'racikan-base') racikanState.base = { value, price };
+                        if (parent.id === 'racikan-sugar') racikanState.sugar = { value, price };
+                    }
+                    racikanOption.classList.toggle('active', racikanOption.classList.contains('active') || parent.id !== 'racikan-herbs');
+                    racikanOption.classList.toggle('border-brand-deep-brown', racikanOption.classList.contains('active'));
+                    racikanOption.classList.toggle('bg-brand-beige', racikanOption.classList.contains('active'));
+                    racikanOption.classList.toggle('text-white', racikanOption.classList.contains('active'));
+                    updateRacikanPrice();
+                }
+                if (target.closest('#racikan-next-btn')) handleRacikanNext();
+                if (target.closest('#racikan-back-btn')) {
+                    if (racikanCurrentStep > 1) { racikanCurrentStep--; updateRacikanStep(); } 
+                    else navigateTo('home-screen');
+                }
+                if (target.closest('#chat-send-btn') && $('#chat-input').value.trim()) {
+                    chatLogic[chatState]($('#chat-input').value.trim());
+                    $('#chat-input').value = '';
+                }
+                if (target.closest('.chat-option-btn')) {
+                    chatLogic[chatState](target.closest('.chat-option-btn').dataset.value);
+                }
+            });
+            $('#chat-input').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && e.target.value.trim()) {
+                    chatLogic[chatState](e.target.value.trim());
+                    e.target.value = '';
+                }
+            });
+        });
     </script>
 </body>
 </html>
